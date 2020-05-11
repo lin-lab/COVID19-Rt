@@ -1,8 +1,8 @@
-source('~/COVID19-Rt/preprocess_data/preprocess_jhu.R')
-source('~/COVID19-Rt/estimate_rt/estimate_rt_master.R')
+source('./COVID19-Rt/preprocess_data/preprocess_jhu.R')
+source('./COVID19-Rt/estimate_rt/estimate_rt_master.R')
 
-jhu_counties <- load_jhu(level='County',pull_date = '2020-05-08', start_date = '2020-03-01', end_date = '2020-05-01')
-jhu_states <- load_jhu(level='State',pull_date = '2020-05-08', start_date = '2020-03-01', end_date = '2020-05-01')
+jhu_counties <- load_jhu(level='County',pull_date = '2020-05-11', start_date = '2020-03-01', end_date = '2020-05-11')
+jhu_states <- load_jhu(level='State',pull_date = '2020-05-11', start_date = '2020-03-01', end_date = '2020-05-11')
 
 state_rt <- c()
 for (ii in 1:length(unique(jhu_states$stateName))){
@@ -25,5 +25,5 @@ names(county_rt)[c(2,5)] <- c('date','FIPS')
 county_rt$date <- as.character(county_rt$date)
 jhu_county_out <- merge(jhu_counties, county_rt, by=c('FIPS','date'))
 
-write.table(jhu_county_out, "~/COVID19-Rt/initial_estimates/jhu_county_rt.csv", quote = F, row.names = F, col.names = T, sep=',')
-write.table(jhu_state_out, "~/COVID19-Rt/initial_estimates/jhu_state_rt.csv", quote = F, row.names = F, col.names = T, sep=',')
+write.table(jhu_county_out, "./COVID19-Rt/initial_estimates/jhu_county_rt.csv", quote = F, row.names = F, col.names = T, sep=',')
+write.table(jhu_state_out, "./COVID19-Rt/initial_estimates/jhu_state_rt.csv", quote = F, row.names = F, col.names = T, sep=',')
