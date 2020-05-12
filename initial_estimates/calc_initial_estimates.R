@@ -8,7 +8,7 @@ state_rt <- c()
 for (ii in 1:length(unique(jhu_states$stateName))){
   jhu_state_sub <- jhu_states[jhu_states$stateName==unique(jhu_states$stateName)[ii],]
   state_rt <- rbind(state_rt,
-  cbind(estimate_rt_EpiEstim(jhu_state_sub$date, jhu_state_sub$positiveIncrease, mean_serial = 4.5, std_serial = 3.5), unique(jhu_states$stateName)[ii]))
+  cbind(estimate_rt_EpiEstim(jhu_state_sub$date, jhu_state_sub$positiveIncrease, mean_serial = 5.2, std_serial = 5.1), unique(jhu_states$stateName)[ii]))
 }
 names(state_rt)[c(2,5)] <- c('date','stateName')
 state_rt$date <- as.character(state_rt$date)
@@ -19,7 +19,7 @@ county_rt <- c()
 for (ii in 1:length(unique(jhu_counties$FIPS))){
   jhu_county_sub <- jhu_counties[jhu_counties$FIPS==unique(jhu_counties$FIPS)[ii],]
   county_rt <- rbind(county_rt,
-                    cbind(estimate_rt_EpiEstim(jhu_county_sub$date, jhu_county_sub$positiveIncrease, mean_serial = 4.5, std_serial = 3.5), unique(jhu_counties$FIPS)[ii]))
+                    cbind(estimate_rt_EpiEstim(jhu_county_sub$date, jhu_county_sub$positiveIncrease, mean_serial = 5.2, std_serial = 5.1), unique(jhu_counties$FIPS)[ii]))
 }
 names(county_rt)[c(2,5)] <- c('date','FIPS')
 county_rt$date <- as.character(county_rt$date)
