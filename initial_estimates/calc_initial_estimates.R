@@ -19,7 +19,7 @@ for (ii in 1:length(uniq_states)) {
           cur_state)
 }
 state_rt <- do.call(rbind, state_rt_lst)
-names(state_rt)[c(2,5)] <- c('date','stateName')
+names(state_rt)[c(2,ncol(state_rt))] <- c('date','stateName')
 state_rt$date <- as.character(state_rt$date)
 jhu_state_out <- merge(jhu_states, state_rt, by=c('stateName','date'))
 
@@ -36,7 +36,7 @@ for (ii in 1:length(uniq_uid)) {
           cur_uid)
 }
 county_rt <- do.call(rbind, county_rt_lst)
-names(county_rt)[c(2,5)] <- c('date','UID')
+names(county_rt)[c(2,ncol(county_rt))] <- c('date','UID')
 county_rt$date <- as.character(county_rt$date)
 jhu_county_out <- merge(jhu_counties, county_rt, by=c('UID','date'))
 
@@ -53,7 +53,7 @@ for (ii in 1:length(uniq_uid)) {
           cur_uid)
 }
 global_rt <- do.call(rbind, global_rt_lst)
-names(global_rt)[c(2,5)] <- c('date','UID')
+names(global_rt)[c(2,ncol(global_rt))] <- c('date','UID')
 global_rt$date <- as.character(global_rt$date)
 jhu_global_out <- merge(jhu_global, global_rt, by=c('UID','date'))
 
