@@ -60,3 +60,8 @@ jhu_global_out <- merge(jhu_global, global_rt, by=c('UID','date'))
 write.table(jhu_county_out, "./COVID19-Rt/initial_estimates/jhu_county_rt.csv", quote = F, row.names = F, col.names = T, sep=',')
 write.table(jhu_state_out, "./COVID19-Rt/initial_estimates/jhu_state_rt.csv", quote = F, row.names = F, col.names = T, sep=',')
 write.table(jhu_global_out, "./COVID19-Rt/initial_estimates/jhu_global_rt.csv", quote = F, row.names = F, col.names = T, sep=',')
+
+
+write.table(jhu_county_out, "./COVID19-Rt/initial_estimates/jhu_county_rt.tsv", quote = F, row.names = F, col.names = T, sep = "\t")
+write.table(jhu_state_out, "./COVID19-Rt/initial_estimates/jhu_state_rt.tsv", quote = F, row.names = F, col.names = T, sep = "\t")
+write.table(jhu_global_out, "./COVID19-Rt/initial_estimates/jhu_global_rt.tsv", quote = F, row.names = F, col.names = T, sep = "\t")
