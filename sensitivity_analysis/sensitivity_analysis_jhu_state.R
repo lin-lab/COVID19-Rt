@@ -1,5 +1,5 @@
 #Load in relevant libraries
-library (readr)
+library(readr)
 library(EpiEstim)
 library(corrplot)
 library(RColorBrewer)
@@ -164,7 +164,6 @@ Rt_stayathome_EpiEstim_7.5_3.4 <- as.numeric(as.character(unlist(lapply(state_Rt
 Rt_stayathome_EpiEstim_4.7_2.9 <- as.numeric(as.character(unlist(lapply(state_Rt_EpiEstim_4.7_2.9,function(x){x[as.character(x$interval_end)==as.character(lockdown[lockdown$State == x$state[1],"Date"]),"mean_rt"]}))))
 Rt_stayathome_EpiEstim_3.96_4.75 <- as.numeric(as.character(unlist(lapply(state_Rt_EpiEstim_3.96_4.75,function(x){x[as.character(x$interval_end)==as.character(lockdown[lockdown$State == x$state[1],"Date"]),"mean_rt"]}))))
 Rt_stayathome_EpiEstim_4.4_3.0 <- as.numeric(as.character(unlist(lapply(state_Rt_EpiEstim_4.4_3.0,function(x){x[as.character(x$interval_end)==as.character(lockdown[lockdown$State == x$state[1],"Date"]),"mean_rt"]}))))
-
 
 
 data_for_heatmap_stayathome <- cbind(si_5.2_5.1 = Rt_stayathome_EpiEstim_5.2_5.1,
