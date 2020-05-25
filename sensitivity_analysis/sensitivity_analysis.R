@@ -57,3 +57,19 @@ sensitivity_data_EpiEstim <- function(dates_list, positive_increase_list, mean_s
   return(out_r_est_list)
 }
 
+
+estimate_rt_R0_state <- function(state_data_combined, mean_serial, std_serial, handle_negatives=TRUE){
+  out_r_est_state <- list()
+  for (stateName in unique(state_data_combined$stateName)){
+    state_data <- state_data_combined[state_data_combined$stateName == stateName,]
+    state_data$positiveIncrease[is.na(state_data$positiveIncrease)] <- 0
+    try(out_r_est_state[[stateName]] <- estimate_rt_R0(dates = state_data$date,
+                                                       positive_increase = state_data$positiveIncrease,
+                                                       gen_mean = mean_serial,
+                                                       gen_sd = std_serial,
+                                                       handle_negatives = handle_negatives))
+    try(out_r_est_state[[stateName]]["state"] <- stateName)
+  }
+  return(out_r_est_state)
+}
+

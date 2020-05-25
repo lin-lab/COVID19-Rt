@@ -10,7 +10,7 @@ source('./COVID19-Rt/estimate_rt/estimate_rt_master.R')
 
 
 ######## JHU state
-jhu_states <- load_jhu(level='State',pull_date = '2020-05-12', start_date = '2020-03-01', end_date = '2020-05-11')
+jhu_states <- load_jhu(level='State',pull_date = '2020-05-12', start_date = '2020-03-08', end_date = '2020-05-08')
 non_us_stateName <- unique(jhu_states$stateName)[c(3,10,14,15,40,45,54)] # non US states
 jhu_states <- jhu_states[jhu_states$stateName %in% setdiff(unique(jhu_states$stateName), non_us_stateName),]
 

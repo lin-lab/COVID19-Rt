@@ -80,7 +80,7 @@ ggcorplot = function(data,var_text_size,cor_text_limits){
   return(
     ggplot(data = z, mapping = aes(x = x, y = y)) + 
       geom_point() + 
-      geom_smooth(colour = 'red', method = 'lm', fill = 'green') + 
+      geom_smooth(colour = 'blue', method = 'lm', fill = 'green') + 
       geom_text(geom_params = list(size=var_text_size)
                 , data = diag
                 , mapping = aes(
@@ -95,6 +95,7 @@ ggcorplot = function(data,var_text_size,cor_text_limits){
                                , size = rsq
                                , colour = p
                              ))+
+      scale_colour_manual(values=c('blue','blue'))+
       f+
       o+
       size_scale
