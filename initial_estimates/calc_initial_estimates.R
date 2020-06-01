@@ -2,9 +2,9 @@ source('./COVID19-Rt/preprocess_data/preprocess_jhu.R')
 source('./COVID19-Rt/estimate_rt/estimate_rt_master.R')
 
 #Load in data from data-cleaning github
-jhu_counties <- load_jhu(level='County',pull_date = '2020-05-12', start_date = '2020-03-01', end_date = '2020-05-11')
-jhu_states <- load_jhu(level='State',pull_date = '2020-05-12', start_date = '2020-03-01', end_date = '2020-05-11')
-jhu_global <- load_jhu(level='Global',pull_date = '2020-05-12', start_date = '2020-03-01', end_date = '2020-05-11')
+jhu_counties <- load_jhu(level='County',pull_date = '2020-06-01', start_date = '2020-03-01', end_date = '2020-05-29')
+jhu_states <- load_jhu(level='State',pull_date = '2020-06-01', start_date = '2020-03-01', end_date = '2020-05-29')
+jhu_global <- load_jhu(level='Global',pull_date = '2020-06-01', start_date = '2020-03-01', end_date = '2020-05-29')
 
 #Perform Rt estimation across all states, indexing by stateName
 state_rt_lst <- list()
@@ -57,9 +57,9 @@ names(global_rt)[c(2,ncol(global_rt))] <- c('date','UID')
 global_rt$date <- as.character(global_rt$date)
 jhu_global_out <- merge(jhu_global, global_rt, by=c('UID','date'))
 
-write.table(jhu_county_out, "./COVID19-Rt/initial_estimates/jhu_county_rt.csv", quote = F, row.names = F, col.names = T, sep=',')
-write.table(jhu_state_out, "./COVID19-Rt/initial_estimates/jhu_state_rt.csv", quote = F, row.names = F, col.names = T, sep=',')
-write.table(jhu_global_out, "./COVID19-Rt/initial_estimates/jhu_global_rt.csv", quote = F, row.names = F, col.names = T, sep=',')
+write.table(jhu_county_out, "./COVID19-Rt/initial_estimates/jhu_county_rt.csv", quote = T, row.names = F, col.names = T, sep=',')
+write.table(jhu_state_out, "./COVID19-Rt/initial_estimates/jhu_state_rt.csv", quote = T, row.names = F, col.names = T, sep=',')
+write.table(jhu_global_out, "./COVID19-Rt/initial_estimates/jhu_global_rt.csv", quote = T, row.names = F, col.names = T, sep=',')
 
 
 write.table(jhu_county_out, "./COVID19-Rt/initial_estimates/jhu_county_rt.tsv", quote = F, row.names = F, col.names = T, sep = "\t")
