@@ -11,9 +11,12 @@ estimate_rt_EpiEstim <- function(dates, positive_increase, mean_serial, std_seri
   }
   r_est <- EpiEstim::estimate_R(positive_increase, method = "parametric_si",
                                 config = make_config(list(mean_si = mean_serial, std_si = std_serial)))$R #, t_start=t_start, t_end=t_end)))$R
-  out_r_est <- data.frame(cbind(dates[r_est$t_start], dates[r_est$t_end],r_est$`Mean(R)`, r_est$`Std(R)`, 
-                                r_est$`Quantile.0.025(R)`, r_est$`Quantile.0.975(R)`))
-  names(out_r_est) <- c('interval_start', 'interval_end', 'mean_rt', 'std_rt', 'ci_lower', 'ci_upper')
+  out_r_est <- data.frame(interval_start = dates[r_est$t_start],
+                          interval_end = dates[r_est$t_end],
+                          mean_rt = r_est$`Mean(R)`,
+                          std_rt = r_est$`Std(R)`,
+                          ci_lower = r_est$`Quantile.0.025(R)`,
+                          ci_upper = r_est$`Quantile.0.975(R)`)
   return(out_r_est)
 }
 
