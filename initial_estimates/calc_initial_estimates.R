@@ -2,9 +2,10 @@ source('../preprocess_data/preprocess_jhu.R')
 source('../estimate_rt/estimate_rt_master.R')
 
 #Load in data from data-cleaning github
-jhu_counties <- load_jhu(level='County', start_date = '2020-03-01', end_date = '2020-06-08')
-jhu_states <- load_jhu(level='State',  start_date = '2020-03-01', end_date = '2020-06-08')
-jhu_global <- load_jhu(level='Global', start_date = '2020-03-01', end_date = '2020-06-08')
+today_date <- format(Sys.Date(), "%Y-%m-%d")
+jhu_counties <- load_jhu(level='County', start_date = '2020-03-01', end_date = today_date)
+jhu_states <- load_jhu(level='State',  start_date = '2020-03-01', end_date = today_date)
+jhu_global <- load_jhu(level='Global', start_date = '2020-03-01', end_date = today_date)
 
 #Perform Rt estimation across all states, indexing by stateName
 state_rt_lst <- list()
