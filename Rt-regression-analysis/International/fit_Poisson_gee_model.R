@@ -30,14 +30,14 @@ library(nlme)
 #### ===========================
 #### LOAD THE DATA
 #### ===========================
-# Load code to calculate cumulative incidence.
-source("CalculateCumulativeIncidence.R")
-
 # directories setup (if needed)
 
 # load cleaned merged data
-dt <- as.data.frame(fread("cleaned_country_level_2020_06_18.csv", 
+dt <- as.data.frame(fread("cleaned_country_level_2020_06_28.csv", 
                           sep=",", header = TRUE, fill = TRUE))
+
+# load code to calculate cumulative incidence.
+source("CalculateCumulativeIncidence.R")
 
 #### ======================
 #### HELPER FUNCTIONS
@@ -138,7 +138,7 @@ geeglm_coef_data <- function(fit, var_type, gee_obj, variable_name = NULL, estim
                    coef_table$Variable %like% "lockdown" | 
                    coef_table$Variable %like% "continent" | 
                    # coef_table$Variable %like% "weekend" |
-                   coef_table$Variable %like% "positive")
+                   coef_table$Variable %like% "openup")
     
     y_se <- sqrt(diag(fit$geese[[var_type]]))[ind]
     
@@ -152,7 +152,7 @@ geeglm_coef_data <- function(fit, var_type, gee_obj, variable_name = NULL, estim
                    coef_table$Variable %like% "lockdown" | 
                    coef_table$Variable %like% "continent" | 
                    # coef_table$Variable %like% "weekend" |
-                   coef_table$Variable %like% "positive")
+                   coef_table$Variable %like% "openup")
     
     y_se <- sqrt(diag(fit[[var_type]]))[ind]
     
@@ -162,7 +162,7 @@ geeglm_coef_data <- function(fit, var_type, gee_obj, variable_name = NULL, estim
                                         Variable %like% "lockdown" | 
                                         Variable %like% "continent" | 
                                         # Variable %like% "weekend" |
-                                        coef_table$Variable %like% "positive")
+                                        coef_table$Variable %like% "openup")
   
   # clean up coefficient names and extract corresponding s.e. values 
   y <- coef_table[, estimate_name]
@@ -188,6 +188,9 @@ geeglm_coef_data <- function(fit, var_type, gee_obj, variable_name = NULL, estim
 #### ===========================
 #### PREPARE REGRESSION DATA
 #### ===========================
+# recast type of date
+# dt$lockdown_date <- as.Date(dt$lockdown_date, format="%m/%d/%Y")
+# dt$openup_date <- as.Date(dt$openup_date, format="%m/%d/%Y")
 
 # define continuous time variables
 dt <- data.table(dt)
@@ -196,7 +199,10 @@ dt[,`:=`(
   days_int = days_since("2020-01-01", date),
   
   # days since lockdown order was placed
-  days_s_lockdown = days_since(lockdown_date, date),
+  # days_s_lockdown = days_since(lockdown_date, date),
+  
+  # days since openup date
+  # days_s_openup = days_since(openup_date, date),
 
   # days since first reported case
   days_s_1p = days_since(min(date[positive > 0]), date),
@@ -205,21 +211,13 @@ dt[,`:=`(
   days_s_50p = days_since(min(date[positive >= 50]), date)
 ), by = countryName]
 
-
 # define dummy time variables
 dt[,`:=`(
-  lockdown = 1*(days_s_lockdown > 0),
   weekday = weekdays(as.Date(date))
 ),]
 
-
-# Factorize variables for regression
-dt <- as.data.frame(dt)
-dt$lockdown <- as.factor(dt$lockdown)
-dt$countryName <- as.factor(dt$countryName)
-dt$weekday <- as.factor(dt$weekday)
-
 # Add weekend indicator variable
+dt <- as.data.frame(dt)
 dt$weekend <- ifelse(dt$weekday %in% c("Saturday", "Sunday"), 1, 0)
 
 # sort the data before getting Lambda
@@ -241,35 +239,18 @@ dt[, Lam := getLambda(
 
 # To mimick EpiEstim, aggregate within 7-day window:
 dt[,`:=`(
-  Lam_s7 = lagSum(Lam, 7),
-  inc_s7 = lagSum(daily_inc, 7),
   mobility_avg7 = lagMean(mobility_change_residential, 7)
 ), by = countryName]
 
-# cross sectional data (use latest observation)
-dt_country <- (dt) %>%
-  group_by(countryName) %>%
-  arrange(countryName, desc(date)) %>%
-  summarise_all(first)
-# 184 countries --> 166 countries
 
-
-# Quality control of Rt
-# Option 1: truncate Rt values (keep 1-99 percentile)
-# dt <- (dt) %>%
-#   filter(!is.na(mean_rt)) %>%
-#   filter(mean_rt < quantile(mean_rt, 0.99) & mean_rt > quantile(mean_rt, 0.01))
-
-# Option 2: Restrict country-dates to total cases > 50 <-- Avoid too much weighting on priors
-dt <- dt[dt$positive >= 50, ]
-
-# Remove NA values for RHS (ONLY KEEP TERMS TO BE INCLUDED)
+# Remove NA values for RHS (ONLY KEEP REGRESSORS TO BE INCLUDED)
 dt <- as.data.frame(dt)
-dt_reg <- dt[complete.cases(dt[c("daily_inc", "positive", 
+dt_reg <- dt[complete.cases(dt[c("daily_inc", 
                                  "Lam", 
-                                 "days_int", "days_s_50p",
+                                 "days_int", 
+                                 "days_s_50p",
                                  "weekday", 
-                                 "unique_continent",
+                                 "continent",
                                  "population", 
                                  "population_density", 
                                  "median_age", 
@@ -279,56 +260,46 @@ dt_reg <- dt[complete.cases(dt[c("daily_inc", "positive",
                                  "hospital_beds_per_100k", 
                                  "Health_exp_pct_GDP_2016",
                                  "gdp_per_capita_PPP",
-                                 # "Life_expectancy_at_birth_both",
-                                 "days_s_lockdown",
-                                 "lockdown",
-                                 "stringencyIndex",
+                                 "containmentIndex",
+                                 "healthTestingIndex",
+                                 "economicSupportIndex",
                                  "mobility_avg7"
                                   )]), ]
 
-# 82 countries, 6594 observations
-
-# Compare calculations to EpiEstim.
-# Calculated Rt is positively biased
+# additional QC: for each country, drop the initial 7 days --> unreliable Lambda estimates
 dt_reg <- as.data.frame(dt_reg %>%
                 group_by(countryName) %>%
                 arrange(countryName, date) %>%
                 mutate(days_within_country = sequence(n())))
-                            
-# png(file = paste0( "Rt_compare.png"))
-# plot(I((inc_s7)/(Lam_s7+1)) ~ mean_rt, 
-#      subset(dt_reg, days_within_country > 7 & Lam_s7 > 50 & positive >= 50),
-#      xlab = "EpiEstim Rt", 
-#      ylab = "Hand-Calculated Rt"); 
-# abline(0, 1, col='red')
-# dev.off()
 
-# # Investigate the deviations and calibrate the distance
-# dt_reg$rt_diff <- abs((dt_reg$inc_s7 / (dt_reg$Lam_s7+1)) - dt_reg$mean_rt)
-# aa <- dt_reg[dt_reg$days_within_country > 1 & dt_reg$Lam_s7 > 50 & dt_reg$positive >= 50, ]
-# denom_count <- dim(aa)[1]
-# 1 - dim(aa[aa$rt_diff > 0.1, ])[1] / denom_count
-# 1 - dim(aa[aa$rt_diff > 0.5, ])[1] / denom_count
-# 1 - dim(aa[aa$rt_diff > 1, ])[1] / denom_count
-
-# 96% within 0.1 
-# 98.8% within 0.5 
-# 99.3% within 1
-
-# subset to tolerance within 0.5
 dt_reg <- dt_reg[dt_reg$days_within_country > 7 & dt_reg$positive >= 50, ]
+# 103 countries, 8569 obs 
 
-# 80 countries, 6026 observations
+# save regression data to file
+write.table(dt_reg, paste0(cleaned.path, "regression_final_model_", globalTime, ".csv"), 
+            append = FALSE, sep = ",",
+            row.names = FALSE, col.names = TRUE)
 
 #### ===============
 #### MODEL FITTING
 #### ===============
+# check the date range
+as.Date("2020-01-01")+min(dt_reg$days_int) #03-15
+as.Date("2020-01-01")+max(dt_reg$days_int) #06-23
+
+# anchor the order of categorical variable
+dt_reg$continent <- as.factor(dt_reg$continent)
+levels(dt_reg$continent) <- c("Asia", "Africa", "Europe",
+                              "Oceania", "North America", 
+                              "Central America", "South America")
+dt_reg$weekday <- as.factor(dt_reg$weekday)
+levels(dt_reg$weekday) <- c("Monday", "Tuesday", "Wednesday", 
+                            "Thursday", "Friday", "Saturday", "Sunday")
 # Fixed Effects
 fe_eqn = daily_inc ~ 
   offset(log1p(Lam)) +
-  log1p(positive) +
   factor(weekday) +
-  factor(unique_continent) + 
+  factor(continent) + 
   scale(population) +
   scale(population_density) +
   scale(median_age) +
@@ -338,37 +309,12 @@ fe_eqn = daily_inc ~
   scale(hospital_beds_per_100k) +
   scale(Health_exp_pct_GDP_2016) +
   scale(gdp_per_capita_PPP) +
-  # scale(Life_expectancy_at_birth_both) +
-  scale(days_s_lockdown) +
-  factor(lockdown) +
-  scale(stringencyIndex) + 
-  scale(mobility_avg7)
+  scale(containmentIndex) + 
+  scale(healthTestingIndex) +
+  scale(economicSupportIndex)
 
-# check the date range
-as.Date("2020-01-01")+min(dt_reg$days_int) #03-15
-as.Date("2020-01-01")+max(dt_reg$days_int) #06-07
 
-# check VIF of the model
-check_vif <- vif(lm(fe_eqn, data = dt_reg))
-
-###### Model 1. Uncentered time (Calendar date)
-
-# knots values for B-spline terms
-day_knots <- seq_days(dt_reg$days_int, 30)
-
-# clean up final equation for fitting
-eqn = as.formula(paste0(fe_eqn[2], " ~ ", fe_eqn[3],
-                        "+ bs(days_int, knots = day_knots)"))
-
-# run geeglm
-fit_uncenter <- geeglm_fit_pois(dt = dt_reg, 
-                       model_formula = eqn,
-                       gee_id_var = "countryName", 
-                       corstr = "ar1", 
-                       estimate_type = "glm")
-
-###### Model 2. Centered time (Days since outbreak, 50 cases reported within country)
-
+###### Model 1. No mobility change included
 # knots values for B-spline terms
 day_knots <- seq_days(dt_reg$days_s_50p, 30)
 
@@ -377,75 +323,27 @@ eqn = as.formula(paste0(fe_eqn[2], " ~ ", fe_eqn[3],
                         "+ bs(days_s_50p, knots = day_knots)"))
 
 # run geeglm
-fit_center <- geeglm_fit_pois(dt = dt_reg, 
+fit_no_mobility <- geeglm_fit_pois(dt = dt_reg, 
                                 model_formula = eqn,
                                 gee_id_var = "countryName", 
                                 corstr = "ar1", 
                                 estimate_type = "glm")
 
-#### ======================
-#### REGRESSION PLOTS
-#### ======================
-# manually enter covariate names
-variable_name <- c(
-   # "Weekend or not",
-   "Log1p(Total cases)",
-   "Ref-Africa: Asia", 
-   "Ref-Africa: Europe", 
-   "Ref-Africa: North America",
-   "Ref-Africa: Oceania", 
-   "Ref-Africa: South America",
-   "Ref-Africa: Trans Asia and Europe",
-   "Population", 
-   "Population density",
-   "Median age",
-   "Diabetes prevalence", 
-   "CVD Death rate",
-   "# of Physicians per 1000", 
-   "# of hospital beds per 100k",
-   "Health expenditure as % of GDP",
-   "GDP per capita (PPP)",
-   # "Life expectancy at birth",
-   "Days since lockdown",
-   "Lockdown or not",
-   "Government policy stringency",
-   "Mobility change (lag 7 average)"
-   )
+###### Model 2. Mobility change included
+# knots values for B-spline terms
+day_knots <- seq_days(dt_reg$days_s_50p, 30)
 
-# plot for both S.E. options
-variance_types = c("vbeta", "vbeta.naiv")
-tags <- c("san", "naive")
-se_labels <- c("Sandwich", "Model-based")
+# clean up final equation for fitting
+eqn = as.formula(paste0(fe_eqn[2], " ~ ", fe_eqn[3],
+                        "+ scale(mobility_avg7)",
+                        "+ bs(days_s_50p, knots = day_knots)"))
 
-# plot for these models
-results <- list(fit_uncenter, fit_center)
-model_labels <- c("Uncentered Time (Calendar Date)", 
-                  "Centered Time (Days since 50 cases reported in the country)")
-model_tags <- c("fit_uncenter_", "fit_center_")
+# run geeglm
+fit_mobility <- geeglm_fit_pois(dt = dt_reg, 
+                                   model_formula = eqn,
+                                   gee_id_var = "countryName", 
+                                   corstr = "ar1", 
+                                   estimate_type = "glm")
 
-for (j in 1:2) {
-  for (i in 1:2) {
-    # 1. Plot results from geeglm
-    plot_dt <- geeglm_coef_data(results[[j]], var_type = variance_types[i], variable_name = variable_name, gee_obj = "glm")
-    p1 <- ggplot(plot_dt) +
-      geom_bar(aes(x=name, y=value), stat="identity", fill="royalblue", alpha=0.7) +
-      geom_errorbar(aes(x=name, ymin=value-(1.96*se), ymax=value+(1.96*se), width=0.2),
-                    colour="firebrick2", alpha=0.9, size=0.8) +
-      coord_flip() +
-      labs(x = 'Variables', y = expression("Coefficient" %+-% "1.96 SE"), 
-           title = 'Poisson GEE Regression Coefficients',
-           subtitle = paste0("80 countries, 6026 observations. March 15 - June 7. \nCountry clusters, AR1 correlation structure. ", 
-                             se_labels[i], " SE. \n", model_labels[j])) +
-      theme(plot.title=element_text(hjust=0.5, size=30),
-            plot.subtitle=element_text(size=15),
-            axis.title.x=element_text(margin=margin(t=10, r=0, b=0, l=0), hjust=0.5, size=15),
-            axis.title.y=element_text(margin=margin(t=0, r=10, b=0, l=0), vjust=0.5, size=15),
-            axis.text.x=element_text(size=15),
-            axis.text.y=element_text(size=15),
-            legend.title=element_text(size=15),
-            legend.text=element_text(size=15))
-    ggsave(paste0("pois_gee_", model_tags[j], tags[i], "_se_reg_coef_bar.png"), p1, width=15, height=10)
-  }
-}
 
 
