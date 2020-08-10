@@ -12,9 +12,8 @@ require(splines)
 require(geepack)
 require(broom)
 
-SI_PARAMS_choices <- data.frame(MEAN = c(5.2, 5.8, 7.5, 4.7, 3.96, 4.4),
-                                SD = c(5.5, 4.5, 3.4, 2.9, 4.75, 3.0),
-                                NTS = c(30, 30, 30, 30, 30, 30))
+SI_PARAMS_choices <- data.frame(MEAN = c(5.2,5.8,7.5,4.7,3.96,4.4),
+                                SD = c(5.5,4.5,3.4,2.9,4.75,3.0))
 
 for (choice in 1:dim(SI_PARAMS_choices)[1]){
   rm(list=setdiff(ls(), c("SI_PARAMS_choices", "choice")))
@@ -24,7 +23,7 @@ for (choice in 1:dim(SI_PARAMS_choices)[1]){
   #  Fixed parameters for Rt model fitting. 
   # ----------------------------------------------------------------
   
-  OUT_TABLE_NAME = paste0("/n/holystore01/LABS/xlin/Lab/covid19/sensitivity/US/SI/US_Rt_Intervention_Output_","SI_MEAN=",SI_PARAMS_choices[choice,"MEAN"],"_SD=",SI_PARAMS_choices[choice,"SD"],"_NTS=",SI_PARAMS_choices[choice,"NTS"],".csv")
+  OUT_TABLE_NAME = paste0("/n/holystore01/LABS/xlin/Lab/covid19/sensitivity/US/SI/US_Rt_Intervention_Output_","SI_MEAN=",SI_PARAMS_choices[choice,"MEAN"],"_SD=",SI_PARAMS_choices[choice,"SD"],".csv")
   
   # ** denotes parameters we may want to vary for sensitivity analysis. 
   
@@ -55,7 +54,7 @@ for (choice in 1:dim(SI_PARAMS_choices)[1]){
   SI_PARAMS = list(
     MEAN = SI_PARAMS_choices[choice,"MEAN"], # ** SI mean.
     SD = SI_PARAMS_choices[choice,"SD"], # ** SI standard deviation. 
-    NTS = SI_PARAMS_choices[choice,"NTS"] # Maximum no. days infectious. 
+    NTS = 30 # Maximum no. days infectious. 
   )
   
   # Confirmation-infection lag "deconvolution". 
