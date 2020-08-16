@@ -1,4 +1,4 @@
-# R code for running the sensitivity analysis for SI parameters
+# R code for running the sensitivity analysis for HERD parameters
 # Author: Corbin Quick, Xihao Li, Derek Shyr, Zilin Li
 
 setwd("/n/holystore01/LABS/xlin/Lab/covid19/analysis/sensitivity/US")
