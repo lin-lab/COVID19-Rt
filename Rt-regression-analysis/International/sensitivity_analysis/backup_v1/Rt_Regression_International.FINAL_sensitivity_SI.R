@@ -1,6 +1,6 @@
 #----------------------------------------------------------------
 # Project: Lin Lab - Covid19
-# Analysis: R code for running the sensitivity analysis for SPLINE parameters
+# Analysis: R code for running the sensitivity analysis for SI parameters
 # Author: Hui Li, Xihao Li, Derek Shyr, Zilin Li
 # Requirements: cleaned data for regression
 #----------------------------------------------------------------
@@ -29,16 +29,17 @@ library(geepack)
 library(splines)
 library(lme4)
 
-SPLINE_PARAMS_choices <- data.frame(KNOTS_DATE = c(0,4,8,16))
+SI_PARAMS_choices <- data.frame(MEAN = c(5.2,5.8,7.5,4.7,3.96,4.4),
+                                SD = c(5.5,4.5,3.4,2.9,4.75,3.0))
 
-for (choice in 1:dim(SPLINE_PARAMS_choices)[1]){
-  rm(list=setdiff(ls(), c("SPLINE_PARAMS_choices", "choice")))
+for (choice in 1:dim(SI_PARAMS_choices)[1]){
+  rm(list=setdiff(ls(), c("SI_PARAMS_choices", "choice")))
   gc()
   
   #### ===========================
   #### CUSTOMIZABLE PARAMETERS
   #### ===========================
-  OUT_TABLE_NAME = paste0("/n/holystore01/LABS/xlin/Lab/covid19/sensitivity/International/SPLINE/International_Rt_Intervention_Output_","KNOTS_DATE=",SPLINE_PARAMS_choices[choice,"KNOTS_DATE"],".csv")
+  OUT_TABLE_NAME = paste0("/n/holystore01/LABS/xlin/Lab/covid19/sensitivity/International/SI/International_Rt_Intervention_Output_","SI_MEAN=",SI_PARAMS_choices[choice,"MEAN"],"_SD=",SI_PARAMS_choices[choice,"SD"],".csv")
   
   # ** denotes parameters we may want to vary for sensitivity analysis. 
   
@@ -49,7 +50,7 @@ for (choice in 1:dim(SPLINE_PARAMS_choices)[1]){
   
   # Time trend (date) spline parameters 
   SPLINE_PARAMS <- list(
-    KNOTS_DATE = SPLINE_PARAMS_choices[choice,"KNOTS_DATE"], # ** Knots for calendar date cubic spline.
+    KNOTS_DATE = 8, # ** Knots for calendar date cubic spline.
     KNOTS_DS = 0 # ** Knots for days-since-outbreak cubic spline.
   )
   
@@ -62,8 +63,8 @@ for (choice in 1:dim(SPLINE_PARAMS_choices)[1]){
   
   # Serial interval (SI) parameters. 
   SI_PARAMS = list(
-    MEAN = 5.2, # ** SI mean.
-    SD = 5.5, # ** SI standard deviation. 
+    MEAN = SI_PARAMS_choices[choice,"MEAN"], # ** SI mean.
+    SD = SI_PARAMS_choices[choice,"SD"], # ** SI standard deviation. 
     NTS = 30 # Maximum no. days infectious. 
   )
   
@@ -96,7 +97,7 @@ for (choice in 1:dim(SPLINE_PARAMS_choices)[1]){
   #### LOAD CLEANED DATASET
   #### ===========================
   source("CalculateCumulativeIncidence.R")
-  source("/n/holystore01/LABS/xlin/Lab/covid19/sensitivity/International/scripts/deconv.R")
+  source("deconv.R")
   
   date_stamp <- "2020_08_09"
   dt <- as.data.frame(fread(paste0("regression_intervention_", date_stamp, ".csv"), sep=",", header = TRUE, fill = TRUE))

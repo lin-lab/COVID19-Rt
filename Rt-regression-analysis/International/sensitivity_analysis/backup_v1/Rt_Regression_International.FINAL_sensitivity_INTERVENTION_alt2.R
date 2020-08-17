@@ -32,7 +32,7 @@ library(lme4)
 #### ===========================
 #### CUSTOMIZABLE PARAMETERS
 #### ===========================
-OUT_TABLE_NAME = paste0("/n/holystore01/LABS/xlin/Lab/covid19/sensitivity/International/INTERVENTION_ADDITIONAL/International_Rt_Intervention_alt1_Output.csv")
+OUT_TABLE_NAME = paste0("/n/holystore01/LABS/xlin/Lab/covid19/sensitivity/International/INTERVENTION_ADDITIONAL/International_Rt_Intervention_alt2_Output.csv")
 
 # ** denotes parameters we may want to vary for sensitivity analysis. 
 
@@ -50,8 +50,8 @@ SPLINE_PARAMS <- list(
 # Intervention lags
 INTERVENTION_PARAMS <- list(
   DAYS_LAG = 14, # ** How many days before interventions affect Rt?
-  VARS = c("containmentIndex", "healthTestingIndex", "economicSupportIndex"), #"international_travel_control",
-  VAR_TYPE = "scale" # factor: categorical variables; scale: continuous variables
+  VARS = c("workplace_closing", "stay_home_order", "mask_mandate"), #c("containmentIndex", "healthTestingIndex", "economicSupportIndex"), #"international_travel_control",
+  VAR_TYPE = "factor" # factor: categorical variables; scale: continuous variables
 )
 
 # Serial interval (SI) parameters. 
@@ -90,7 +90,7 @@ OUTPUT_OPTION = list(
 #### LOAD CLEANED DATASET
 #### ===========================
 source("CalculateCumulativeIncidence.R")
-source("/n/holystore01/LABS/xlin/Lab/covid19/sensitivity/International/scripts/deconv.R")
+source("deconv.R")
 
 date_stamp <- "2020_08_09"
 dt <- as.data.frame(fread(paste0("regression_intervention_", date_stamp, ".csv"), sep=",", header = TRUE, fill = TRUE))

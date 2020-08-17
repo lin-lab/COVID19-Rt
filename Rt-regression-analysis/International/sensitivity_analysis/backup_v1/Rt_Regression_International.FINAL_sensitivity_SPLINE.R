@@ -1,6 +1,6 @@
 #----------------------------------------------------------------
 # Project: Lin Lab - Covid19
-# Analysis: R code for running the sensitivity analysis for SE parameters
+# Analysis: R code for running the sensitivity analysis for SPLINE parameters
 # Author: Hui Li, Xihao Li, Derek Shyr, Zilin Li
 # Requirements: cleaned data for regression
 #----------------------------------------------------------------
@@ -29,16 +29,16 @@ library(geepack)
 library(splines)
 library(lme4)
 
-SE_PARAMS_choices <- data.frame(VAR_TYPE = c("vbeta.naiv","vbeta"))
+SPLINE_PARAMS_choices <- data.frame(KNOTS_DATE = c(0,4,8,16))
 
-for (choice in 1:dim(SE_PARAMS_choices)[1]){
-  rm(list=setdiff(ls(), c("SE_PARAMS_choices", "choice")))
+for (choice in 1:dim(SPLINE_PARAMS_choices)[1]){
+  rm(list=setdiff(ls(), c("SPLINE_PARAMS_choices", "choice")))
   gc()
   
   #### ===========================
   #### CUSTOMIZABLE PARAMETERS
   #### ===========================
-  OUT_TABLE_NAME = paste0("/n/holystore01/LABS/xlin/Lab/covid19/sensitivity/International/SE/International_Rt_Intervention_Output_","VAR_TYPE=",SE_PARAMS_choices[choice,"VAR_TYPE"],".csv")
+  OUT_TABLE_NAME = paste0("/n/holystore01/LABS/xlin/Lab/covid19/sensitivity/International/SPLINE/International_Rt_Intervention_Output_","KNOTS_DATE=",SPLINE_PARAMS_choices[choice,"KNOTS_DATE"],".csv")
   
   # ** denotes parameters we may want to vary for sensitivity analysis. 
   
@@ -49,7 +49,7 @@ for (choice in 1:dim(SE_PARAMS_choices)[1]){
   
   # Time trend (date) spline parameters 
   SPLINE_PARAMS <- list(
-    KNOTS_DATE = 8, # ** Knots for calendar date cubic spline.
+    KNOTS_DATE = SPLINE_PARAMS_choices[choice,"KNOTS_DATE"], # ** Knots for calendar date cubic spline.
     KNOTS_DS = 0 # ** Knots for days-since-outbreak cubic spline.
   )
   
@@ -77,7 +77,7 @@ for (choice in 1:dim(SE_PARAMS_choices)[1]){
   
   # Standard error estimator
   SE_ESTIMATOR = list(
-    VAR_TYPE = SE_PARAMS_choices[choice,"VAR_TYPE"] # ** vbeta.naiv: Model-based SE. vbeta: Sandwich estimator.
+    VAR_TYPE = "vbeta.naiv" # ** vbeta.naiv: Model-based SE. vbeta: Sandwich estimator.
   )
   
   # Date range
@@ -96,7 +96,7 @@ for (choice in 1:dim(SE_PARAMS_choices)[1]){
   #### LOAD CLEANED DATASET
   #### ===========================
   source("CalculateCumulativeIncidence.R")
-  source("/n/holystore01/LABS/xlin/Lab/covid19/sensitivity/International/scripts/deconv.R")
+  source("deconv.R")
   
   date_stamp <- "2020_08_09"
   dt <- as.data.frame(fread(paste0("regression_intervention_", date_stamp, ".csv"), sep=",", header = TRUE, fill = TRUE))

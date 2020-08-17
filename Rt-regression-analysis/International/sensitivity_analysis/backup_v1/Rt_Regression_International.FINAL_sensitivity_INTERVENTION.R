@@ -1,6 +1,6 @@
 #----------------------------------------------------------------
 # Project: Lin Lab - Covid19
-# Analysis: R code for running the sensitivity analysis for OUTBREAK parameters
+# Analysis: R code for running the sensitivity analysis for INTERVENTION parameters
 # Author: Hui Li, Xihao Li, Derek Shyr, Zilin Li
 # Requirements: cleaned data for regression
 #----------------------------------------------------------------
@@ -29,22 +29,22 @@ library(geepack)
 library(splines)
 library(lme4)
 
-OUTBREAK_PARAMS_choices <- data.frame(MIN_CASES = c(25,50,100))
+INTERVENTION_PARAMS_choices <- data.frame(DAYS_LAG = c(0,7,14,21))
 
-for (choice in 1:dim(OUTBREAK_PARAMS_choices)[1]){
-  rm(list=setdiff(ls(), c("OUTBREAK_PARAMS_choices", "choice")))
+for (choice in 1:dim(INTERVENTION_PARAMS_choices)[1]){
+  rm(list=setdiff(ls(), c("INTERVENTION_PARAMS_choices", "choice")))
   gc()
   
   #### ===========================
   #### CUSTOMIZABLE PARAMETERS
   #### ===========================
-  OUT_TABLE_NAME = paste0("/n/holystore01/LABS/xlin/Lab/covid19/sensitivity/International/OUTBREAK/International_Rt_Intervention_Output_","MIN_CASES=",OUTBREAK_PARAMS_choices[choice,"MIN_CASES"],".csv")
+  OUT_TABLE_NAME = paste0("/n/holystore01/LABS/xlin/Lab/covid19/sensitivity/International/INTERVENTION/International_Rt_Intervention_Output_","DAYS_LAG=",INTERVENTION_PARAMS_choices[choice,"DAYS_LAG"],".csv")
   
   # ** denotes parameters we may want to vary for sensitivity analysis. 
   
   # "Outbreak" parameters.
   OUTBREAK_PARAMS = list(
-    MIN_CASES = OUTBREAK_PARAMS_choices[choice,"MIN_CASES"] # ** Number of cases considered an "outbreak".
+    MIN_CASES = 50 # ** Number of cases considered an "outbreak".
   )
   
   # Time trend (date) spline parameters 
@@ -55,7 +55,7 @@ for (choice in 1:dim(OUTBREAK_PARAMS_choices)[1]){
   
   # Intervention lags
   INTERVENTION_PARAMS <- list(
-    DAYS_LAG = 14, # ** How many days before interventions affect Rt?
+    DAYS_LAG = INTERVENTION_PARAMS_choices[choice,"DAYS_LAG"], # ** How many days before interventions affect Rt?
     VARS = c("workplace_closing", "stay_home_order", "mask_mandate"), #c("containmentIndex", "healthTestingIndex", "economicSupportIndex"), #"international_travel_control",
     VAR_TYPE = "scale" # factor: categorical variables; scale: continuous variables
   )
@@ -96,7 +96,7 @@ for (choice in 1:dim(OUTBREAK_PARAMS_choices)[1]){
   #### LOAD CLEANED DATASET
   #### ===========================
   source("CalculateCumulativeIncidence.R")
-  source("/n/holystore01/LABS/xlin/Lab/covid19/sensitivity/International/scripts/deconv.R")
+  source("deconv.R")
   
   date_stamp <- "2020_08_09"
   dt <- as.data.frame(fread(paste0("regression_intervention_", date_stamp, ".csv"), sep=",", header = TRUE, fill = TRUE))

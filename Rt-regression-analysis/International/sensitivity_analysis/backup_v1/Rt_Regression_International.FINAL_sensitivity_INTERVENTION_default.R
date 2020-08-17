@@ -90,7 +90,7 @@ OUTPUT_OPTION = list(
 #### LOAD CLEANED DATASET
 #### ===========================
 source("CalculateCumulativeIncidence.R")
-source("/n/holystore01/LABS/xlin/Lab/covid19/sensitivity/International/scripts/deconv.R")
+source("deconv.R")
 
 date_stamp <- "2020_08_09"
 dt <- as.data.frame(fread(paste0("regression_intervention_", date_stamp, ".csv"), sep=",", header = TRUE, fill = TRUE))

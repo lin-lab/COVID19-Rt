@@ -1,6 +1,6 @@
 #----------------------------------------------------------------
 # Project: Lin Lab - Covid19
-# Analysis: R code for running the sensitivity analysis for LAG parameters
+# Analysis: R code for running the sensitivity analysis for SE parameters
 # Author: Hui Li, Xihao Li, Derek Shyr, Zilin Li
 # Requirements: cleaned data for regression
 #----------------------------------------------------------------
@@ -29,17 +29,16 @@ library(geepack)
 library(splines)
 library(lme4)
 
-LAG_PARAMS_choices <- data.frame(SHAPE = c(7,5,10,15,25),
-                                 RATE = c(1,1,2,3,5))
+SE_PARAMS_choices <- data.frame(VAR_TYPE = c("vbeta.naiv","vbeta"), stringsAsFactors = FALSE)
 
-for (choice in 1:dim(LAG_PARAMS_choices)[1]){
-  rm(list=setdiff(ls(), c("LAG_PARAMS_choices", "choice")))
+for (choice in 1:dim(SE_PARAMS_choices)[1]){
+  rm(list=setdiff(ls(), c("SE_PARAMS_choices", "choice")))
   gc()
   
   #### ===========================
   #### CUSTOMIZABLE PARAMETERS
   #### ===========================
-  OUT_TABLE_NAME = paste0("/n/holystore01/LABS/xlin/Lab/covid19/sensitivity/International/LAG/International_Rt_Intervention_Output_","SHAPE=",LAG_PARAMS_choices[choice,"SHAPE"],"_RATE=",LAG_PARAMS_choices[choice,"RATE"],".csv")
+  OUT_TABLE_NAME = paste0("/n/holystore01/LABS/xlin/Lab/covid19/sensitivity/International/SE/International_Rt_Intervention_Output_","VAR_TYPE=",SE_PARAMS_choices[choice,"VAR_TYPE"],".csv")
   
   # ** denotes parameters we may want to vary for sensitivity analysis. 
   
@@ -70,15 +69,15 @@ for (choice in 1:dim(LAG_PARAMS_choices)[1]){
   
   # Confirmation-infection lag "deconvolution". 
   LAG_PARAMS = list(
-    USE_LAG = TRUE, # ** Use the random lag deconvolution?
+    USE_LAG = FALSE, # ** Use the random lag deconvolution?
     MAX_DAYS = 14, # Maximum lag period. 
-    SHAPE = LAG_PARAMS_choices[choice,"SHAPE"], # ** Lag distribution: Gamma rate. 
-    RATE = LAG_PARAMS_choices[choice,"RATE"] # ** Lag distribution: Gamma rate. 
+    SHAPE = 7, # ** Lag distribution: Gamma rate. 
+    RATE = 1 # ** Lag distribution: Gamma rate. 
   )
   
   # Standard error estimator
   SE_ESTIMATOR = list(
-    VAR_TYPE = "vbeta.naiv" # ** vbeta.naiv: Model-based SE. vbeta: Sandwich estimator.
+    VAR_TYPE = SE_PARAMS_choices[choice,"VAR_TYPE"] # ** vbeta.naiv: Model-based SE. vbeta: Sandwich estimator.
   )
   
   # Date range
@@ -97,7 +96,7 @@ for (choice in 1:dim(LAG_PARAMS_choices)[1]){
   #### LOAD CLEANED DATASET
   #### ===========================
   source("CalculateCumulativeIncidence.R")
-  source("/n/holystore01/LABS/xlin/Lab/covid19/sensitivity/International/scripts/deconv.R")
+  source("deconv.R")
   
   date_stamp <- "2020_08_09"
   dt <- as.data.frame(fread(paste0("regression_intervention_", date_stamp, ".csv"), sep=",", header = TRUE, fill = TRUE))
