@@ -61,11 +61,6 @@ names(global_rt)[c(2,ncol(global_rt))] <- c('date','UID')
 global_rt$date <- as.character(global_rt$date)
 jhu_global_out <- merge(jhu_global, global_rt, by=c('UID','date'))
 
-write.table(jhu_county_out, "jhu_county_rt.csv", quote = T, row.names = F, col.names = T, sep=',')
-write.table(jhu_state_out, "jhu_state_rt.csv", quote = T, row.names = F, col.names = T, sep=',')
-write.table(jhu_global_out, "jhu_global_rt.csv", quote = T, row.names = F, col.names = T, sep=',')
-
-
 write.table(jhu_county_out, "jhu_county_rt.tsv", quote = F, row.names = F, col.names = T, sep = "\t")
 write.table(jhu_state_out, "jhu_state_rt.tsv", quote = F, row.names = F, col.names = T, sep = "\t")
 write.table(jhu_global_out, "jhu_global_rt.tsv", quote = F, row.names = F, col.names = T, sep = "\t")
