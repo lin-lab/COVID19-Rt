@@ -3,6 +3,10 @@
 library(data.table)
 library(splines)
 library(geepack)
+library(dplyr)
+source("../../helpers/helper_functions.R")
+source("gee_fit_helpers.R")
+
 setwd("/Users/zhangh24/GoogleDrive/Covid/")
 data <- as.data.frame(fread("./data/regression_2020_06_28.csv"))
 #constrained the analysis between Marth 15th to April 30th
@@ -22,85 +26,21 @@ data.clean = data[idx,]
 
 #data.clean$date[1] is 2020-03-16
 # calculate days since an event with specified start_date
-days_since <- function(start_date, dates, nz = TRUE){
-  out <- as.numeric(as.Date(dates, format = "%m/%d/%y") - as.Date(start_date, format = "%m/%d/%y"))
-  if(nz){out[out < 0] <- 0}
-  return(out)
-}
-library(dplyr)
 #every analysis started from March-16th
 #data.clean$days_int = days_since("01/01/2020",data.clean$date)
 #data.clean$lock_down_days = days_since(data.clean$lockdown_date,data.clean$date,nz=T)
 
-#data.clean = data.clean %>% 
+#data.clean = data.clean %>%
 #  mutate(lock_down_binary= ifelse(lock_down_days>0,1,0))
 
-seq_days <- function(x, delta){
-  out <- seq(min(x) + delta, max(x), delta)
-}
 #gee model
-gee_fit <- function(eqn, dt, gee_id_var, corstr = "exchangeable"){
-  dt <- as.data.frame(dt)
-  dt$gee_id_var <- as.integer(factor(dt[[gee_id_var]], order = TRUE))
-  
-  dt <- as.data.table(dt)
-  setorder(dt, gee_id_var)
-  fit = geepack::geeglm(formula = eqn, data = dt,
-                        id = gee_id_var, corstr = corstr,
-                        family =  poisson(link = "log"))
-  # fit = geepack::geese(formula = eqn, data = dt,
-  #                       id = gee_id_var, corstr = corstr,
-  #                       family =  poisson(link = "log"))
-  return(fit)
-}
-
-
-reg_coef_data <- function(fit, se_name = "Std.err", pattern="scale"){
-  coef_table <- as.data.table(coef(summary(fit)), keep = "Variable")
-  
-  coef_table <- coef_table %>% filter(Variable %like% pattern |
-                                        Variable %like% "factor" |
-                                        Variable %like% "lock_down"|
-                                        Variable %like% "log")
-  y <- coef_table[, "Estimate"]
-  y_se <- coef_table[, se_name]
-  library(magrittr)
-  coef_name  = coef_table$Variable %<>% gsub(pattern = "scale",
-                                             replacement="") %>% 
-    gsub(pattern = "weekday",
-         replacement="") %>% 
-    gsub(pattern = "continent",
-         replacement="") %>% 
-    gsub(pattern = "factor",
-         replacement="") %>% 
-    gsub(pattern = "\\(",
-         replacement="") %>% 
-    gsub(pattern = "\\)",
-         replacement="") %>% 
-    gsub(pattern = "\\)",
-         replacement="") 
-  colnames(coef_table)[5] <- "P"
-  P = coef_table %>% select(P)
-  
-  CI <- paste0("[",round(y-1.96*y_se,2),",",round(y+1.96*y_se,2),"]")
-  
-  
-  
-  plot_dt <- data.frame(name=coef_name,
-                        value=y,
-                        se=y_se,
-                        CI= CI,
-                        P = P)
-  return(plot_dt)
-  return(plot_dt)
-}
 
 
 
 
 
 data.clean <- data.clean %>% filter(positiveIncrease>=0)
-#daily death 
+#daily death
 data.complete = data.clean[complete.cases(data.clean[
   c("positiveIncrease",
     "countryName",
@@ -122,7 +62,7 @@ data.complete = data.clean[complete.cases(data.clean[
     "mobility_avg7",
     "days_int")]),]
 countryremove <- names(which(table(data.complete$countryName)<=15))
-data.complete = data.complete %>% 
+data.complete = data.complete %>%
   filter(countryName%in%countryremove==F)
 
 # Prepare knots values for B-spline
@@ -151,7 +91,7 @@ cases_eqn =  positiveIncrease~
   bs(days_s_50p, knots = day_knots)
 
 
-fit = gee_fit(dt = data.complete, eqn = cases_eqn, 
+fit = gee_fit(dt = data.complete, eqn = cases_eqn,
               gee_id_var = "countryName", corstr = "ar1")
 coefficients(summary(fit))
 
@@ -165,11 +105,11 @@ library(ggplot2)
 # p_daily_positiveIncrease <- ggplot(plot_dt) +
 #   theme_Publication()+
 #   geom_bar(aes(x=name, y=value), stat="identity", fill="royalblue", alpha=0.7) +
-#   geom_errorbar(aes(x=name, ymin=value-(1.96*se), ymax=value+(1.96*se), width=0.2), 
+#   geom_errorbar(aes(x=name, ymin=value-(1.96*se), ymax=value+(1.96*se), width=0.2),
 #                 colour="firebrick2", alpha=0.9, size=0.8) +
 #   coord_flip() +
 #   # ylim(-5, 15) +
-#   labs(x = 'Variables', y = expression("Coefficient" %+-% "1.96 SE"), 
+#   labs(x = 'Variables', y = expression("Coefficient" %+-% "1.96 SE"),
 #        title = 'Longitudinal model',
 #        subtitle = "Daily cases {~offset(log_population)}") +
 #   theme(plot.title=element_text(hjust=0.5, size=30),
