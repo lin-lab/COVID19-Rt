@@ -1,6 +1,3 @@
-#Load in relevant libraries
-library (readr)
-
 #Inputs: level (County, State, or USA), pull date from jhu ("%Y-%m-%d"), start date for the data period ("%Y-%m-%d"), end date for the data period ("%Y-%m-%d")
 load_jhu <- function(level, start_date, end_date){
   #jhu_url <- paste0("https://raw.githubusercontent.com/lin-lab/COVID-data-cleaning/master/jhu_data/cleaned_data/JHU_COVID-19_", level, ".csv")

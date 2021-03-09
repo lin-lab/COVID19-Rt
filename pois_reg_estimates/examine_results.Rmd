@@ -1,0 +1,176 @@
+---
+title: "Diagnostics for Rt, Case Rate, and Death Rate Calculations"
+author: "Andy Shi"
+date: "`r Sys.Date()`"
+output:
+    html_document:
+        keep_md: true
+---
+
+```{r libraries, message = FALSE, warning = FALSE}
+library(dplyr)
+library(purrr)
+library(readr)
+library(knitr)
+library(stringr)
+library(ggplot2)
+library(cowplot)
+```
+
+First, we load libraries and read in the data.
+
+```{r read_data, message = FALSE, warning = FALSE, results = "hide"}
+colspec <- cols(
+  UID = col_integer(),
+  county = col_character(),
+  stateName = col_character(),
+  date = col_date(format = ""),
+  FIPS = col_integer(),
+  positiveIncrease = col_integer(),
+  deathIncrease = col_integer(),
+  positive = col_integer(),
+  death = col_integer(),
+  population = col_integer(),
+  Combined_Key = col_character(),
+  rt = col_double(),
+  rt_lower = col_double(),
+  rt_upper = col_double(),
+  case_rate = col_double(),
+  case_lower = col_double(),
+  case_upper = col_double(),
+  death_rate = col_double(),
+  death_lower = col_double(),
+  death_upper = col_double(),
+  date_lag = col_date(format = "")
+)
+
+state_fit <- read_csv("results/jhu_state_rt_case_death_rate.csv",
+                      col_types = colspec) %>%
+  mutate(geo_level = "state")
+county_fit <- read_csv("results/jhu_county_rt_case_death_rate.csv",
+                       col_types = colspec) %>%
+  mutate(geo_level = "county")
+global_fit <- read_csv("results/jhu_global_rt_case_death_rate.csv",
+                       guess_max = 1e5) %>%
+  mutate(geo_level = "country")
+subnational_fit <- read_csv("results/jhu_subnational_rt_case_death_rate.csv",
+                            guess_max = 1e4) %>%
+  mutate(geo_level = "subnational")
+
+fit_all <- bind_rows(state_fit, county_fit, global_fit, subnational_fit)
+```
+
+# How Big is the Upper CI
+
+## Quantiles
+
+Here we calculate quantiles of upper CI by resolution (country, state, county,
+subnational).
+
+```{r quantiles, results = "asis"}
+check_probs <- c(0.5, 0.8, 0.9, 0.99, 0.999, 0.9999)
+check_quantile <- purrr::partial(quantile, probs = check_probs, na.rm = TRUE)
+
+quantile_df <- fit_all %>%
+  group_by(geo_level) %>%
+  summarize(across(ends_with("_upper"), check_quantile)) %>%
+  mutate(quantile = check_probs)
+kable(quantile_df, n = Inf)
+```
+
+## Worst Offenders
+
+Here we show which locations have the most unstable estimates.
+
+```{r top_rates, results = "asis"}
+top_rates <- function(df, var = c("rt_upper", "case_upper", "death_upper")) {
+  var <- match.arg(var)
+  ret <- df %>%
+    filter(get(var) < Inf) %>%
+    filter(!is.na(get(var))) %>%
+    group_by(UID) %>%
+    slice_max(n = 1, order_by = get(var), with_ties = FALSE) %>%
+    ungroup() %>%
+    select(Combined_Key, !!var) %>%
+    arrange(desc(get(var))) %>%
+    head(n = 20)
+  return(ret)
+}
+
+top_rates_lst <- lapply(c("rt_upper", "case_upper", "death_upper"),
+                        function(v) { top_rates(fit_all, v) })
+kable(top_rates_lst)
+```
+
+# Negative Binomial Diagnostics
+
+Here we check out what the theta values were for the negative binomial
+regression. The command line finds the most recent log file and extracts the
+theta values.
+
+First, we show the histogram of theta values where the negative binomial
+successfully fitted.
+
+```{r negbin_theta_success}
+# get the most recent log file, grep for thetas, print them out
+cmd <- "find -name '*.log.gz' | sort -r | head -n 1 | xargs -I {} zcat {} | grep -Po 'NB fit success: theta = ([0-9.]+)' | cut --delim=' ' -f6"
+
+theta_vals <- as.numeric(system(cmd, intern = TRUE))
+summary(theta_vals)
+data.frame(theta_vals = theta_vals) %>%
+  ggplot(aes(x = theta_vals)) +
+  geom_histogram(bins = 50, color = "black") +
+  scale_x_log10() +
+  xlab(expression(theta)) +
+  ggtitle("Histogram of nb theta for successful fits") +
+  theme(text = element_text(size = 16))
+```
+
+# Poisson Diagnostics
+
+When the negative binomial fitting fails, we revert to either Poisson or
+quasipoisson. We first fit a Poisson, then check for overdispersion. If there's
+overdispersion, we fit the quasipoisson.
+
+```{r pois_pchisq}
+cmd <- "find -name '*.log.gz' | sort -r | head -n 1 | xargs -I {} zcat {} | grep 'pchisq'"
+
+chisq_cmd <- system(cmd, intern = TRUE)
+pchisq_matches <- str_match(chisq_cmd, "pchisq = ([0-9]\\.[0-9\\-e\\+]+)")
+pchisq_vals <- as.double(pchisq_matches[, 2])
+
+summary(pchisq_vals)
+
+ggplot(data.frame(pchisq_vals = pchisq_vals),
+       aes(x = pchisq_vals)) +
+  geom_histogram(binwidth = 0.1, color = "black", fill = "grey") +
+  theme_cowplot() +
+  xlab("Chisq p-values for testing overdispersion") +
+  ylab("Count") +
+  ggtitle("Histogram of chisq p-values")
+
+cat(sprintf("Overdispersion detected in %f cases.\n", mean(pchisq_vals < 0.01)))
+```
+
+```{r resids_df, fig.height = 5, fig.width = 8}
+resid_df_matches <- str_match(chisq_cmd, "([0-9\\.]+) deviance on ([0-9]+) df")
+resid_vals <- as.double(resid_df_matches[, 2])
+df_vals <- as.double(resid_df_matches[, 3])
+resids_df <- data.frame(resids = resid_vals, df = df_vals, pval = pchisq_vals,
+                        overdispersed = (pchisq_vals < 0.01))
+
+ggplot(resids_df, aes(x = df, y = resids, color = overdispersed)) +
+  geom_point(alpha = 0.5) +
+  geom_abline(slope = 1, intercept = 0, lty = 2, lwd = 1, color = "black") +
+  scale_x_log10() + scale_y_log10() +
+  ggtitle("Residual Deviance and Residual DF") +
+  xlab("Residual degrees of freedom") + ylab("Residual deviance") +
+  scale_color_discrete("Identified as\nOverdispersed?") +
+  theme_cowplot()
+```
+
+# Session Info
+
+```{r sessioninfo}
+sessionInfo()
+```
