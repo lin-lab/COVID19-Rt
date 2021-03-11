@@ -2,6 +2,13 @@
 
 set -euxo pipefail
 
+# set path to Rscript
+RSCRIPT=/opt/R/4.0.4/bin/Rscript
+if [[ ! -f ${RSCRIPT} ]]
+then
+    RSCRIPT=/usr/bin/Rscript
+fi
+
 base_url=https://hsph-covid-study.s3.us-east-2.amazonaws.com/JHU_Cleaned
 out_dir=raw_data
 
@@ -20,7 +27,7 @@ do
 done
 
 # call script to calculate estimates
-Rscript --vanilla calc_initial_estimates.R
+$RSCRIPT --vanilla calc_initial_estimates.R
 
 # zip results and upload to amazon s3
 for ext in county state global

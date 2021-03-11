@@ -1,5 +1,5 @@
 source('../preprocess_data/preprocess_jhu.R')
-source('../estimate_rt/estimate_rt_master.R')
+source('estimate_rt_master.R')
 
 #Load in data from data-cleaning github
 today_date <- format(Sys.Date(), "%Y-%m-%d")
