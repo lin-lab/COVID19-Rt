@@ -1,7 +1,7 @@
 ---
 title: "Diagnostics for Rt, Case Rate, and Death Rate Calculations"
 author: "Andy Shi"
-date: "2021-03-11"
+date: "2021-03-15"
 output:
     html_document:
         keep_md: true
@@ -92,30 +92,30 @@ kable(quantile_df, n = Inf)
 
 |geo_level   |  rt_upper| case_upper| death_upper| quantile|
 |:-----------|---------:|----------:|-----------:|--------:|
-|country     |  1.294494|  0.0000165|   0.0000010|   0.5000|
-|country     |  1.701508|  0.0001353|   0.0000041|   0.8000|
-|country     |  2.266653|  0.0002679|   0.0000071|   0.9000|
-|country     |  6.341120|  0.0010059|   0.0000178|   0.9900|
-|country     | 14.291991|  0.1520483|   0.0000270|   0.9990|
-|country     | 31.316877| 17.3087670|   0.0000337|   0.9999|
-|county      |  1.375470|  0.0003269|   0.0000078|   0.5000|
-|county      |  1.732021|  0.0007402|   0.0000170|   0.8000|
-|county      |  2.123699|  0.0010176|   0.0000248|   0.9000|
-|county      |  5.078506|  0.0020067|   0.0000595|   0.9900|
-|county      | 15.299679|  0.0040927|   0.0001102|   0.9990|
-|county      | 68.390345|  0.0098432|   0.0002574|   0.9999|
-|state       |  1.269592|  0.0001690|   0.0000041|   0.5000|
-|state       |  1.459311|  0.0004699|   0.0000097|   0.8000|
-|state       |  1.627853|  0.0007188|   0.0000131|   0.9000|
-|state       |  3.140589|  0.0013338|         Inf|   0.9900|
-|state       |  7.238240|  0.0018429|         Inf|   0.9990|
-|state       | 15.945598|  0.0020682|         Inf|   0.9999|
-|subnational |  1.260978|  0.0000870|   0.0000038|   0.5000|
-|subnational |  1.545312|  0.0002484|   0.0000077|   0.8000|
-|subnational |  1.790091|  0.0003777|   0.0000107|   0.9000|
-|subnational |  3.232242|  0.0007936|   0.0000228|   0.9900|
-|subnational |  6.858068|  0.0013594|   0.0000589|   0.9990|
-|subnational | 15.855780|  0.0022232|         Inf|   0.9999|
+|country     |  1.293950|  0.0000166|   0.0000010|   0.5000|
+|country     |  1.704046|  0.0001365|   0.0000041|   0.8000|
+|country     |  2.263223|  0.0002695|   0.0000071|   0.9000|
+|country     |  6.341554|  0.0009865|   0.0000178|   0.9900|
+|country     | 15.147415|  0.1520483|   0.0000263|   0.9990|
+|country     | 27.428088| 17.3087670|   0.0000339|   0.9999|
+|county      |  1.375327|  0.0003223|   0.0000077|   0.5000|
+|county      |  1.733899|  0.0007332|   0.0000168|   0.8000|
+|county      |  2.127259|  0.0010124|   0.0000247|   0.9000|
+|county      |  5.060135|  0.0020028|   0.0000586|   0.9900|
+|county      | 15.306066|  0.0040195|   0.0001085|   0.9990|
+|county      | 68.149791|  0.0096837|   0.0002853|   0.9999|
+|state       |  1.259496|  0.0001710|   0.0000040|   0.5000|
+|state       |  1.458866|  0.0004649|   0.0000096|   0.8000|
+|state       |  1.629207|  0.0007255|   0.0000130|   0.9000|
+|state       |  3.133079|  0.0013325|         Inf|   0.9900|
+|state       |  7.363034|  0.0018453|         Inf|   0.9990|
+|state       | 15.834416|  0.0020681|         Inf|   0.9999|
+|subnational |  1.259182|  0.0000872|   0.0000038|   0.5000|
+|subnational |  1.540184|  0.0002493|   0.0000077|   0.8000|
+|subnational |  1.776061|  0.0003793|   0.0000105|   0.9000|
+|subnational |  3.181716|  0.0007946|   0.0000224|   0.9900|
+|subnational |  6.688008|  0.0013056|   0.0000531|   0.9990|
+|subnational | 15.663699|  0.0016013|         Inf|   0.9999|
 
 ## Worst Offenders
 
@@ -169,60 +169,60 @@ kable(top_rates_lst)
 |Washington, Louisiana    |  49.56265|
 |Atascosa, Texas          |  48.40705|
 |Marion, Ohio             |  46.44294|
+|Chattahoochee, Georgia   |  43.71466|
 |Jim Wells, Texas         |  41.59997|
-|Anderson, Texas          |  41.14368|
 
  </td>
    <td> 
 
-|Combined_Key        | case_upper|
-|:-------------------|----------:|
-|Heilongjiang, China | 18.4129651|
-|Hubei, China        |  2.0402384|
-|Marion, Ohio        |  0.0852842|
-|Lee, Arkansas       |  0.0418891|
-|Johnson, Wyoming    |  0.0311574|
-|La Salle, Texas     |  0.0199067|
-|Lyon, Kentucky      |  0.0196677|
-|Bent, Colorado      |  0.0126872|
-|Crowley, Colorado   |  0.0125303|
-|Dakota, Nebraska    |  0.0101818|
-|Finney, Kansas      |  0.0098849|
-|Crockett, Texas     |  0.0096837|
-|Norton, Kansas      |  0.0089420|
-|Madison, Texas      |  0.0083310|
-|Moore, Texas        |  0.0081610|
-|Lincoln, Arkansas   |  0.0080750|
-|Comanche, Kansas    |  0.0080249|
-|Elliott, Kentucky   |  0.0079694|
-|Essex, Virginia     |  0.0078519|
-|Pawnee, Kansas      |  0.0077960|
+|Combined_Key            | case_upper|
+|:-----------------------|----------:|
+|Heilongjiang, China     | 18.4129651|
+|Hubei, China            |  2.0402384|
+|Marion, Ohio            |  0.0850576|
+|Livingston, Missouri    |  0.0692464|
+|Lee, Arkansas           |  0.0418891|
+|Johnson, Wyoming        |  0.0311574|
+|Lyon, Kentucky          |  0.0281596|
+|La Salle, Texas         |  0.0200091|
+|Bent, Colorado          |  0.0126872|
+|Crowley, Colorado       |  0.0105844|
+|Dakota, Nebraska        |  0.0101019|
+|Finney, Kansas          |  0.0098849|
+|Crockett, Texas         |  0.0096837|
+|Norton, Kansas          |  0.0089420|
+|Madison, Texas          |  0.0082041|
+|Lincoln, Arkansas       |  0.0080710|
+|Moore, Texas            |  0.0080524|
+|Comanche, Kansas        |  0.0080249|
+|Pawnee, Kansas          |  0.0077960|
+|Bon Homme, South Dakota |  0.0076169|
 
  </td>
    <td> 
 
-|Combined_Key            | death_upper|
-|:-----------------------|-----------:|
-|Stanly, North Carolina  |   0.0010251|
-|Decatur, Indiana        |   0.0003501|
-|Flathead, Montana       |   0.0002679|
-|Phelps, Missouri        |   0.0002176|
-|Duplin, North Carolina  |   0.0001781|
-|Jefferson, Pennsylvania |   0.0001635|
-|Penobscot, Maine        |   0.0001531|
-|Holmes, Ohio            |   0.0001524|
-|Herkimer, New York      |   0.0001496|
-|Kamchatka Krai, Russia  |   0.0001474|
-|Harrisonburg, Virginia  |   0.0001392|
-|Warren, New Jersey      |   0.0001352|
-|Amazonas, Colombia      |   0.0001313|
-|Lynchburg, Virginia     |   0.0001299|
-|Mifflin, Pennsylvania   |   0.0001261|
-|Genesee, New York       |   0.0001258|
-|Daviess, Kentucky       |   0.0001191|
-|Crawford, Arkansas      |   0.0001179|
-|Hill, Texas             |   0.0001138|
-|Lawrence, Alabama       |   0.0001129|
+|Combined_Key             | death_upper|
+|:------------------------|-----------:|
+|Caldwell, North Carolina |   0.0033627|
+|Stanly, North Carolina   |   0.0010251|
+|Decatur, Indiana         |   0.0003501|
+|Flathead, Montana        |   0.0002853|
+|Phelps, Missouri         |   0.0002176|
+|Duplin, North Carolina   |   0.0001781|
+|Jefferson, Pennsylvania  |   0.0001635|
+|Penobscot, Maine         |   0.0001531|
+|Holmes, Ohio             |   0.0001524|
+|Herkimer, New York       |   0.0001496|
+|Warren, New Jersey       |   0.0001352|
+|Mifflin, Pennsylvania    |   0.0001261|
+|Genesee, New York        |   0.0001258|
+|Daviess, Kentucky        |   0.0001191|
+|Lawrence, Alabama        |   0.0001129|
+|Montgomery, New York     |   0.0001119|
+|Columbia, New York       |   0.0001113|
+|Houston, Alabama         |   0.0001108|
+|Covington, Alabama       |   0.0001102|
+|Marion, Illinois         |   0.0001093|
 
  </td>
   </tr>
@@ -249,7 +249,7 @@ summary(theta_vals)
 
 ```
 ##      Min.   1st Qu.    Median      Mean   3rd Qu.      Max. 
-## 0.000e+00 2.000e+00 4.000e+00 1.553e+15 7.000e+00 3.717e+18
+## 0.000e+00 2.000e+00 4.000e+00 7.045e+15 7.000e+00 2.652e+19
 ```
 
 ```r
@@ -283,7 +283,7 @@ summary(pchisq_vals)
 
 ```
 ##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
-## 0.00000 0.02591 0.22182 0.35526 0.59652 1.00000
+## 0.00000 0.02979 0.22767 0.35763 0.60474 1.00000
 ```
 
 ```r
@@ -303,7 +303,7 @@ cat(sprintf("Overdispersion detected in %f cases.\n", mean(pchisq_vals < 0.01)))
 ```
 
 ```
-## Overdispersion detected in 0.207977 cases.
+## Overdispersion detected in 0.196923 cases.
 ```
 
 
