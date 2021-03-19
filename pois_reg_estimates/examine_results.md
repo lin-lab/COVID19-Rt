@@ -1,7 +1,7 @@
 ---
 title: "Diagnostics for Rt, Case Rate, and Death Rate Calculations"
 author: "Andy Shi"
-date: "2021-03-17"
+date: "2021-03-18"
 output:
     html_document:
         keep_md: true
@@ -92,30 +92,30 @@ kable(quantile_df, n = Inf)
 
 |geo_level   |  rt_upper| case_upper| death_upper| quantile|
 |:-----------|---------:|----------:|-----------:|--------:|
-|country     |  1.293816|  0.0000167|   0.0000010|   0.5000|
-|country     |  1.698601|  0.0001358|   0.0000042|   0.8000|
-|country     |  2.259367|  0.0002716|   0.0000071|   0.9000|
-|country     |  5.997080|  0.0009877|   0.0000179|   0.9900|
-|country     | 15.633333|  0.1520483|   0.0000263|   0.9990|
-|country     | 31.927538| 17.3087670|   0.0000336|   0.9999|
-|county      |  1.373630|  0.0003198|   0.0000077|   0.5000|
-|county      |  1.730567|  0.0007310|   0.0000168|   0.8000|
-|county      |  2.127936|  0.0010098|   0.0000246|   0.9000|
-|county      |  5.071113|  0.0019928|   0.0000586|   0.9900|
-|county      | 15.270051|  0.0040094|   0.0001079|   0.9990|
-|county      | 68.009671|  0.0096837|   0.0002853|   0.9999|
-|state       |  1.262864|  0.0001718|   0.0000040|   0.5000|
-|state       |  1.458186|  0.0004665|   0.0000095|   0.8000|
-|state       |  1.622523|  0.0007225|   0.0000129|   0.9000|
-|state       |  3.150629|  0.0013326|         Inf|   0.9900|
-|state       |  7.190881|  0.0018633|         Inf|   0.9990|
-|state       | 15.771895|  0.0020739|         Inf|   0.9999|
-|subnational |  1.256279|  0.0000876|   0.0000038|   0.5000|
-|subnational |  1.538107|  0.0002502|   0.0000077|   0.8000|
-|subnational |  1.771998|  0.0003808|   0.0000105|   0.9000|
-|subnational |  3.117860|  0.0007988|   0.0000225|   0.9900|
-|subnational |  6.592524|  0.0013496|   0.0000566|   0.9990|
-|subnational | 15.752657|  0.0019517|         Inf|   0.9999|
+|country     |  1.296561|  0.0000169|   0.0000010|   0.5000|
+|country     |  1.702219|  0.0001366|   0.0000042|   0.8000|
+|country     |  2.270662|  0.0002707|   0.0000071|   0.9000|
+|country     |  6.085939|  0.0009997|   0.0000181|   0.9900|
+|country     | 15.761859|  0.1520483|   0.0000263|   0.9990|
+|country     | 31.881566| 17.3087670|   0.0000335|   0.9999|
+|county      |  1.374816|  0.0003190|   0.0000077|   0.5000|
+|county      |  1.731410|  0.0007292|   0.0000167|   0.8000|
+|county      |  2.127203|  0.0010084|   0.0000246|   0.9000|
+|county      |  5.094972|  0.0019906|   0.0000584|   0.9900|
+|county      | 14.959959|  0.0040083|   0.0001078|   0.9990|
+|county      | 69.498928|  0.0098849|   0.0002853|   0.9999|
+|state       |  1.266220|  0.0001721|   0.0000040|   0.5000|
+|state       |  1.458276|  0.0004632|   0.0000095|   0.8000|
+|state       |  1.622648|  0.0007165|   0.0000130|   0.9000|
+|state       |  3.141924|  0.0013246|         Inf|   0.9900|
+|state       |  7.189049|  0.0018644|         Inf|   0.9990|
+|state       | 15.749543|  0.0020756|         Inf|   0.9999|
+|subnational |  1.257972|  0.0000876|   0.0000038|   0.5000|
+|subnational |  1.544219|  0.0002518|   0.0000077|   0.8000|
+|subnational |  1.787879|  0.0003845|   0.0000106|   0.9000|
+|subnational |  3.209538|  0.0008078|   0.0000225|   0.9900|
+|subnational |  6.805943|  0.0013552|   0.0000566|   0.9990|
+|subnational | 15.759958|  0.0025344|         Inf|   0.9999|
 
 ## Worst Offenders
 
@@ -153,7 +153,8 @@ kable(top_rates_lst)
 |:------------------------|---------:|
 |Madison, Texas           | 744.29717|
 |Medina, Texas            | 314.30089|
-|Bahamas                  | 145.72467|
+|Bahamas                  | 143.99311|
+|Lyon, Kentucky           | 120.94007|
 |Bastrop, Texas           | 110.28951|
 |Lincoln, Arkansas        | 108.67827|
 |Titus, Texas             | 104.05893|
@@ -170,7 +171,6 @@ kable(top_rates_lst)
 |Washington, Louisiana    |  49.56265|
 |Atascosa, Texas          |  48.40705|
 |Marion, Ohio             |  46.44294|
-|Ascension, Louisiana     |  43.81949|
 
  </td>
    <td> 
@@ -179,22 +179,22 @@ kable(top_rates_lst)
 |:-----------------------|----------:|
 |Heilongjiang, China     | 18.4129651|
 |Hubei, China            |  2.0402384|
-|Marion, Ohio            |  0.0847478|
-|Livingston, Missouri    |  0.0489374|
+|Marion, Ohio            |  0.0845186|
+|Livingston, Missouri    |  0.0526679|
 |Lee, Arkansas           |  0.0418891|
 |Johnson, Wyoming        |  0.0311574|
-|Lyon, Kentucky          |  0.0303053|
+|Lyon, Kentucky          |  0.0266333|
 |La Salle, Texas         |  0.0196973|
 |Bent, Colorado          |  0.0126872|
-|Crowley, Colorado       |  0.0108799|
-|Dakota, Nebraska        |  0.0101297|
+|Crowley, Colorado       |  0.0109397|
+|Dakota, Nebraska        |  0.0101111|
 |Finney, Kansas          |  0.0098849|
 |Crockett, Texas         |  0.0096837|
 |Norton, Kansas          |  0.0089420|
-|Madison, Texas          |  0.0080956|
-|Lincoln, Arkansas       |  0.0080732|
+|Lincoln, Arkansas       |  0.0080790|
 |Moore, Texas            |  0.0080524|
 |Comanche, Kansas        |  0.0080249|
+|Madison, Texas          |  0.0080219|
 |Pawnee, Kansas          |  0.0077960|
 |Bon Homme, South Dakota |  0.0076169|
 
@@ -215,8 +215,8 @@ kable(top_rates_lst)
 |Warren, New Jersey      |   0.0001352|
 |Mifflin, Pennsylvania   |   0.0001261|
 |Genesee, New York       |   0.0001258|
+|Kamchatka Krai, Russia  |   0.0001245|
 |Daviess, Kentucky       |   0.0001191|
-|Kamchatka Krai, Russia  |   0.0001133|
 |Lawrence, Alabama       |   0.0001129|
 |Montgomery, New York    |   0.0001119|
 |Columbia, New York      |   0.0001113|
@@ -249,7 +249,7 @@ summary(theta_vals)
 
 ```
 ##      Min.   1st Qu.    Median      Mean   3rd Qu.      Max. 
-## 0.000e+00 2.000e+00 4.000e+00 2.378e+15 7.000e+00 5.990e+18
+## 0.000e+00 2.000e+00 4.000e+00 6.691e+15 7.000e+00 2.511e+19
 ```
 
 ```r
@@ -283,7 +283,7 @@ summary(pchisq_vals)
 
 ```
 ##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
-##  0.0000  0.0272  0.2234  0.3569  0.6126  1.0000
+## 0.00000 0.02679 0.22767 0.36726 0.65019 1.00000
 ```
 
 ```r
@@ -303,7 +303,7 @@ cat(sprintf("Overdispersion detected in %f cases.\n", mean(pchisq_vals < 0.01)))
 ```
 
 ```
-## Overdispersion detected in 0.202492 cases.
+## Overdispersion detected in 0.202985 cases.
 ```
 
 
