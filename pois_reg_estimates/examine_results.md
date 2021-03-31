@@ -1,7 +1,7 @@
 ---
 title: "Diagnostics for Rt, Case Rate, and Death Rate Calculations"
 author: "Andy Shi"
-date: "2021-03-18"
+date: "2021-03-30"
 output:
     html_document:
         keep_md: true
@@ -90,32 +90,32 @@ kable(quantile_df, n = Inf)
 
 
 
-|geo_level   |  rt_upper| case_upper| death_upper| quantile|
-|:-----------|---------:|----------:|-----------:|--------:|
-|country     |  1.296561|  0.0000169|   0.0000010|   0.5000|
-|country     |  1.702219|  0.0001366|   0.0000042|   0.8000|
-|country     |  2.270662|  0.0002707|   0.0000071|   0.9000|
-|country     |  6.085939|  0.0009997|   0.0000181|   0.9900|
-|country     | 15.761859|  0.1520483|   0.0000263|   0.9990|
-|country     | 31.881566| 17.3087670|   0.0000335|   0.9999|
-|county      |  1.374816|  0.0003190|   0.0000077|   0.5000|
-|county      |  1.731410|  0.0007292|   0.0000167|   0.8000|
-|county      |  2.127203|  0.0010084|   0.0000246|   0.9000|
-|county      |  5.094972|  0.0019906|   0.0000584|   0.9900|
-|county      | 14.959959|  0.0040083|   0.0001078|   0.9990|
-|county      | 69.498928|  0.0098849|   0.0002853|   0.9999|
-|state       |  1.266220|  0.0001721|   0.0000040|   0.5000|
-|state       |  1.458276|  0.0004632|   0.0000095|   0.8000|
-|state       |  1.622648|  0.0007165|   0.0000130|   0.9000|
-|state       |  3.141924|  0.0013246|         Inf|   0.9900|
-|state       |  7.189049|  0.0018644|         Inf|   0.9990|
-|state       | 15.749543|  0.0020756|         Inf|   0.9999|
-|subnational |  1.257972|  0.0000876|   0.0000038|   0.5000|
-|subnational |  1.544219|  0.0002518|   0.0000077|   0.8000|
-|subnational |  1.787879|  0.0003845|   0.0000106|   0.9000|
-|subnational |  3.209538|  0.0008078|   0.0000225|   0.9900|
-|subnational |  6.805943|  0.0013552|   0.0000566|   0.9990|
-|subnational | 15.759958|  0.0025344|         Inf|   0.9999|
+|geo_level   |    rt_upper| case_upper| death_upper| quantile|
+|:-----------|-----------:|----------:|-----------:|--------:|
+|country     |    1.292805|  0.0000177|   0.0000010|   0.5000|
+|country     |    1.698443|  0.0001428|   0.0000042|   0.8000|
+|country     |    2.282170|  0.0002861|   0.0000071|   0.9000|
+|country     |    6.389453|  0.0010128|   0.0000184|   0.9900|
+|country     |   16.204128|  0.1335427|   0.0000272|   0.9990|
+|country     | 1271.292788| 17.3087670|   0.0000381|   0.9999|
+|county      |    1.374532|  0.0003080|   0.0000076|   0.5000|
+|county      |    1.729290|  0.0007144|   0.0000166|   0.8000|
+|county      |    2.122974|  0.0009937|   0.0000242|   0.9000|
+|county      |    5.062541|  0.0019803|   0.0000585|   0.9900|
+|county      |   15.723140|  0.0040280|   0.0001066|   0.9990|
+|county      |  113.161688|  0.0096127|   0.0010251|   0.9999|
+|state       |    1.267797|  0.0001721|   0.0000040|   0.5000|
+|state       |    1.463159|  0.0004531|   0.0000096|   0.8000|
+|state       |    1.623592|  0.0006939|   0.0000132|   0.9000|
+|state       |    3.056127|  0.0012846|   0.0000555|   0.9900|
+|state       |    6.814701|  0.0017283|         Inf|   0.9990|
+|state       |    9.762749|  0.0019752|         Inf|   0.9999|
+|subnational |    1.257974|  0.0000877|   0.0000038|   0.5000|
+|subnational |    1.536128|  0.0002559|   0.0000077|   0.8000|
+|subnational |    1.767536|  0.0003890|   0.0000105|   0.9000|
+|subnational |    3.034128|  0.0008125|   0.0000229|   0.9900|
+|subnational |    6.408077|  0.0012976|   0.0000566|   0.9990|
+|subnational |   13.925664|  0.0015355|         Inf|   0.9999|
 
 ## Worst Offenders
 
@@ -149,54 +149,54 @@ kable(top_rates_lst)
   <tr>
    <td> 
 
-|Combined_Key             |  rt_upper|
-|:------------------------|---------:|
-|Madison, Texas           | 744.29717|
-|Medina, Texas            | 314.30089|
-|Bahamas                  | 143.99311|
-|Lyon, Kentucky           | 120.94007|
-|Bastrop, Texas           | 110.28951|
-|Lincoln, Arkansas        | 108.67827|
-|Titus, Texas             | 104.05893|
-|Woodward, Oklahoma       |  84.16939|
-|Columbiana, Ohio         |  83.09680|
-|Morgan, Kentucky         |  69.16967|
-|Iberville, Louisiana     |  63.44578|
-|Burnet, Texas            |  60.71425|
-|Sao Tome and Principe    |  57.62610|
-|Karnes, Texas            |  56.34749|
-|Reeves, Texas            |  53.58266|
-|Howard, Texas            |  52.12505|
-|Central African Republic |  49.89349|
-|Washington, Louisiana    |  49.56265|
-|Atascosa, Texas          |  48.40705|
-|Marion, Ohio             |  46.44294|
+|Combined_Key          |   rt_upper|
+|:---------------------|----------:|
+|Lesotho               | 1271.29279|
+|Madison, Texas        |  744.29717|
+|Medina, Texas         |  314.30089|
+|Rapides, Louisiana    |  167.92356|
+|Bahamas               |  144.21988|
+|Orange, Texas         |  140.73089|
+|Carson City, Nevada   |  116.84549|
+|South Sudan           |  115.57681|
+|Bastrop, Texas        |  110.28951|
+|Lincoln, Arkansas     |  108.67827|
+|Titus, Texas          |  104.05893|
+|Moore, Texas          |  103.19862|
+|Woodward, Oklahoma    |   84.16939|
+|Columbiana, Ohio      |   83.09680|
+|Morgan, Kentucky      |   69.16967|
+|Iberville, Louisiana  |   63.44578|
+|Burnet, Texas         |   60.71425|
+|Sao Tome and Principe |   57.62610|
+|Karnes, Texas         |   56.34749|
+|Reeves, Texas         |   53.58266|
 
  </td>
    <td> 
 
-|Combined_Key            | case_upper|
-|:-----------------------|----------:|
-|Heilongjiang, China     | 18.4129651|
-|Hubei, China            |  2.0402384|
-|Marion, Ohio            |  0.0845186|
-|Livingston, Missouri    |  0.0526679|
-|Lee, Arkansas           |  0.0418891|
-|Johnson, Wyoming        |  0.0311574|
-|Lyon, Kentucky          |  0.0266333|
-|La Salle, Texas         |  0.0196973|
-|Bent, Colorado          |  0.0126872|
-|Crowley, Colorado       |  0.0109397|
-|Dakota, Nebraska        |  0.0101111|
-|Finney, Kansas          |  0.0098849|
-|Crockett, Texas         |  0.0096837|
-|Norton, Kansas          |  0.0089420|
-|Lincoln, Arkansas       |  0.0080790|
-|Moore, Texas            |  0.0080524|
-|Comanche, Kansas        |  0.0080249|
-|Madison, Texas          |  0.0080219|
-|Pawnee, Kansas          |  0.0077960|
-|Bon Homme, South Dakota |  0.0076169|
+|Combined_Key              | case_upper|
+|:-------------------------|----------:|
+|Heilongjiang, China       | 18.4129651|
+|Hubei, China              |  2.0402384|
+|Marion, Ohio              |  0.0838188|
+|Livingston, Missouri      |  0.0526679|
+|Lee, Arkansas             |  0.0418891|
+|Johnson, Wyoming          |  0.0311574|
+|La Salle, Texas           |  0.0196973|
+|Bent, Colorado            |  0.0126872|
+|Crowley, Colorado         |  0.0103265|
+|Wallis and Futuna, France |  0.0103020|
+|Dakota, Nebraska          |  0.0101501|
+|Finney, Kansas            |  0.0098849|
+|Crockett, Texas           |  0.0096837|
+|Norton, Kansas            |  0.0089420|
+|Ralls, Missouri           |  0.0086793|
+|Bon Homme, South Dakota   |  0.0086349|
+|Lincoln, Arkansas         |  0.0080790|
+|Comanche, Kansas          |  0.0080249|
+|Pawnee, Kansas            |  0.0077960|
+|Dickey, North Dakota      |  0.0075346|
 
  </td>
    <td> 
@@ -204,7 +204,6 @@ kable(top_rates_lst)
 |Combined_Key            | death_upper|
 |:-----------------------|-----------:|
 |Stanly, North Carolina  |   0.0010251|
-|Decatur, Indiana        |   0.0003501|
 |Flathead, Montana       |   0.0002853|
 |Phelps, Missouri        |   0.0002176|
 |Duplin, North Carolina  |   0.0001781|
@@ -215,14 +214,15 @@ kable(top_rates_lst)
 |Warren, New Jersey      |   0.0001352|
 |Mifflin, Pennsylvania   |   0.0001261|
 |Genesee, New York       |   0.0001258|
-|Kamchatka Krai, Russia  |   0.0001245|
-|Daviess, Kentucky       |   0.0001191|
+|Kamchatka Krai, Russia  |   0.0001140|
 |Lawrence, Alabama       |   0.0001129|
 |Montgomery, New York    |   0.0001119|
 |Columbia, New York      |   0.0001113|
 |Houston, Alabama        |   0.0001108|
 |Covington, Alabama      |   0.0001102|
 |Marion, Illinois        |   0.0001093|
+|Lycoming, Pennsylvania  |   0.0001087|
+|Hill, Texas             |   0.0001085|
 
  </td>
   </tr>
@@ -249,7 +249,7 @@ summary(theta_vals)
 
 ```
 ##      Min.   1st Qu.    Median      Mean   3rd Qu.      Max. 
-## 0.000e+00 2.000e+00 4.000e+00 6.691e+15 7.000e+00 2.511e+19
+## 0.000e+00 2.000e+00 4.000e+00 2.489e+15 7.000e+00 5.167e+18
 ```
 
 ```r
@@ -283,7 +283,7 @@ summary(pchisq_vals)
 
 ```
 ##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
-## 0.00000 0.02679 0.22767 0.36726 0.65019 1.00000
+## 0.00000 0.02185 0.21605 0.35378 0.61861 1.00000
 ```
 
 ```r
@@ -303,7 +303,7 @@ cat(sprintf("Overdispersion detected in %f cases.\n", mean(pchisq_vals < 0.01)))
 ```
 
 ```
-## Overdispersion detected in 0.202985 cases.
+## Overdispersion detected in 0.216867 cases.
 ```
 
 
@@ -354,17 +354,18 @@ sessionInfo()
 ## 
 ## other attached packages:
 ## [1] cowplot_1.1.1 ggplot2_3.3.3 stringr_1.4.0 knitr_1.31    readr_1.4.0  
-## [6] purrr_0.3.4   dplyr_1.0.4  
+## [6] purrr_0.3.4   dplyr_1.0.5  
 ## 
 ## loaded via a namespace (and not attached):
-##  [1] pillar_1.4.7      compiler_4.0.4    highr_0.8         tools_4.0.4      
-##  [5] digest_0.6.27     evaluate_0.14     lifecycle_1.0.0   tibble_3.0.6     
-##  [9] gtable_0.3.0      pkgconfig_2.0.3   rlang_0.4.10      DBI_1.1.1        
-## [13] cli_2.3.0         rstudioapi_0.13   yaml_2.2.1        xfun_0.21        
-## [17] withr_2.4.1       generics_0.1.0    vctrs_0.3.6       hms_1.0.0        
-## [21] grid_4.0.4        tidyselect_1.1.0  glue_1.4.2        R6_2.5.0         
-## [25] rmarkdown_2.6     farver_2.0.3      magrittr_2.0.1    scales_1.1.1     
-## [29] ps_1.5.0          ellipsis_0.3.1    htmltools_0.5.1.1 assertthat_0.2.1 
-## [33] colorspace_2.0-0  labeling_0.4.2    stringi_1.5.3     munsell_0.5.0    
-## [37] crayon_1.4.1
+##  [1] highr_0.8         pillar_1.5.1      bslib_0.2.4       compiler_4.0.4   
+##  [5] jquerylib_0.1.3   tools_4.0.4       digest_0.6.27     jsonlite_1.7.2   
+##  [9] evaluate_0.14     lifecycle_1.0.0   tibble_3.1.0      gtable_0.3.0     
+## [13] pkgconfig_2.0.3   rlang_0.4.10      rstudioapi_0.13   cli_2.3.1        
+## [17] DBI_1.1.1         yaml_2.2.1        xfun_0.22         withr_2.4.1      
+## [21] generics_0.1.0    vctrs_0.3.6       sass_0.3.1        hms_1.0.0        
+## [25] grid_4.0.4        tidyselect_1.1.0  glue_1.4.2        R6_2.5.0         
+## [29] fansi_0.4.2       rmarkdown_2.7     farver_2.1.0      magrittr_2.0.1   
+## [33] ps_1.6.0          scales_1.1.1      ellipsis_0.3.1    htmltools_0.5.1.1
+## [37] assertthat_0.2.1  colorspace_2.0-0  labeling_0.4.2    utf8_1.2.1       
+## [41] stringi_1.5.3     munsell_0.5.0     crayon_1.4.1
 ```
