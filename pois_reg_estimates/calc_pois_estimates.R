@@ -52,10 +52,6 @@ us_div[, `:=` (positiveIncrease = positive -
        by = Division]
 us_div[, Combined_Key := Division]
 
-knots_touse <- c(seq(as.Date("2020-03-30"), max(jhu_states$date), by = 30),
-                 as.Date("2020-12-07")) %>%
-  sort()
-
 jhu_global_nonus <- jhu_global[UID != 840, ]
 jhu_us <- jhu_global[UID == 840, ]
 
@@ -78,13 +74,13 @@ system.time({
   fit_lst$state <-
     fit_poisson_by_unit(jhu_states, min_incr = 20,
                         days_per_knot = 30, min_positive = 50,
-                        family = "negbin", knots = knots_touse) %>%
+                        family = "negbin") %>%
     lag_dates(lag = days_lag)
 
   fit_lst$us_div <-
     fit_poisson_by_unit(us_div, min_incr = 20,
                         days_per_knot = 30, min_positive = 50,
-                        family = "negbin", knots = knots_touse) %>%
+                        family = "negbin") %>%
     lag_dates(lag = days_lag)
 
   global_fit_nonus <- fit_poisson_by_unit(jhu_global_nonus, min_incr = 20,
@@ -93,7 +89,7 @@ system.time({
     lag_dates(lag = days_lag)
   us_fit <- fit_poisson_by_unit(jhu_us, min_incr = 20,
                                 days_per_knot = 30, min_positive = 50,
-                                family = "negbin", knots = knots_touse) %>%
+                                family = "negbin") %>%
     lag_dates(lag = days_lag)
   fit_lst$global <- rbind(global_fit_nonus, us_fit)
 
@@ -155,7 +151,7 @@ out <- with(jhu_counties[Combined_Key == "Okfuskee, Oklahoma"],
             fit_poisson(date = date, new_counts = positiveIncrease,
                         min_positive = 50, min_incr = 1, do_remove = FALSE,
                         prop_zeros = 0,
-                        knots = knots_touse, family = "negbin")
+                        family = "negbin")
 )[, .(date, rt = outcome_hat, rt_lower = ci_lower, rt_upper = ci_upper)]
 update_fit(fit_lst, out, loc_key = "Okfuskee, Oklahoma",
            resolution = "county", metric = "rt")
@@ -163,7 +159,7 @@ update_fit(fit_lst, out, loc_key = "Okfuskee, Oklahoma",
 out <- with(jhu_counties[Combined_Key == "Rusk, Texas"],
             fit_poisson(date = date, new_counts = positiveIncrease,
                         min_positive = 50, min_incr = 20,
-                        knots = knots_touse, do_remove = TRUE,
+                        do_remove = TRUE,
                         prop_zeros = 0,
                         family = "negbin")
 )[, .(date, rt = outcome_hat, rt_lower = ci_lower, rt_upper = ci_upper)]
@@ -173,7 +169,6 @@ update_fit(fit_lst, out, loc_key = "Rusk, Texas", resolution = "county",
 out <- with(jhu_counties[Combined_Key == "Gillespie, Texas"],
             fit_poisson(date = date, new_counts = positiveIncrease,
                         min_positive = 50, min_incr = 20,
-                        knots = knots_touse,
                         do_remove = FALSE, prop_zeros = 0,
                         family = "negbin")
 )[, .(date, rt = outcome_hat, rt_lower = ci_lower, rt_upper = ci_upper)]
@@ -221,6 +216,16 @@ out <- with(jhu_global[Combined_Key == "Hubei, China", ],
 update_fit(fit_lst, out, loc_key = "Hubei, China",
            resolution = "global", metric = "case")
 
+out <- with(jhu_global[Combined_Key == "Brazil", ],
+            fit_poisson(date = date, new_counts = positiveIncrease,
+                        population = population, prop_zeros = 0.3,
+                        min_positive = 100, min_incr = 1,
+                        days_per_knot = 30,
+                        family = "negbin")
+)[, .(date, case_rate = outcome_hat, case_lower = ci_lower, case_upper = ci_upper)]
+update_fit(fit_lst, out, loc_key = "Brazil",
+           resolution = "global", metric = "case")
+
 out <- with(jhu_counties[Combined_Key == "Kit Carson, Colorado", ],
             fit_poisson(date = date, new_counts = positiveIncrease,
                         population = population, prop_zeros = 0,
@@ -232,13 +237,14 @@ out <- with(jhu_counties[Combined_Key == "Kit Carson, Colorado", ],
 update_fit(fit_lst, out, loc_key = "Kit Carson, Colorado",
            resolution = "county", metric = "case")
 
+
 # Death Rate Exceptions
 
 out <- with(jhu_counties[Combined_Key == "Anoka, Minnesota"],
             fit_poisson(date = date, new_counts = deathIncrease,
                         population = population,
                         min_positive = 50, min_incr = 1,
-                        knots = knots_touse, prop_zeros = 0,
+                        prop_zeros = 0,
                         family = "negbin")
 )[, .(date, death_rate = outcome_hat, death_lower = ci_lower, death_upper = ci_upper)]
 update_fit(fit_lst, out, loc_key = "Anoka, Minnesota",
