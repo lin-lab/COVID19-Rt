@@ -216,10 +216,11 @@ out <- with(jhu_global[Combined_Key == "Hubei, China", ],
 update_fit(fit_lst, out, loc_key = "Hubei, China",
            resolution = "global", metric = "case")
 
+
 out <- with(jhu_global[Combined_Key == "Brazil", ],
             fit_poisson(date = date, new_counts = positiveIncrease,
-                        population = population, prop_zeros = 0.3,
-                        min_positive = 100, min_incr = 1,
+                        population = population, prop_zeros = 0.0,
+                        min_positive = 50, min_incr = 1,
                         days_per_knot = 30,
                         family = "negbin")
 )[, .(date, case_rate = outcome_hat, case_lower = ci_lower, case_upper = ci_upper)]
