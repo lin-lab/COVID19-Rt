@@ -1,6 +1,6 @@
 # COVID19-Rt
 
-COVID-19 Rt calculation code.
+Code to calculate time-varying effective reproduction number (Rt), case rate, and death rate for COVID-19.
 
 ## Structure of Code
 
