@@ -13,3 +13,7 @@ Code to calculate time-varying effective reproduction number (Rt), case rate, an
 ## Obtaining Rt Estimates
 
 Within `pois_reg_estimates` and `initial_estimates` is a README with links to the latest Rt estimates.
+
+## Misc
+
+The `old_sensitivity` branch contains some sensitivity analysis code for Rt regression, which are depreciated.
