@@ -147,6 +147,13 @@ update_fit <- function(fit_lst, updated, loc_key,
 
 ## Rt Exceptions
 
+out <- with(jhu_states[Combined_Key == "Florida", ],
+            fit_poisson(date = date, new_counts = positiveIncrease,
+                        prop_zeros = 0)
+)[, .(date, rt = outcome_hat, rt_lower = ci_lower, rt_upper = ci_upper)]
+update_fit(fit_lst, out, loc_key = "Florida", resolution = "state",
+           metric = "rt")
+
 out <- with(jhu_counties[Combined_Key == "Okfuskee, Oklahoma"],
             fit_poisson(date = date, new_counts = positiveIncrease,
                         min_positive = 50, min_incr = 1, do_remove = FALSE,
