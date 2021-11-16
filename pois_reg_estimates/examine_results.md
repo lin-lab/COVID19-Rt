@@ -1,7 +1,7 @@
 ---
 title: "Diagnostics for Rt, Case Rate, and Death Rate Calculations"
 author: "Andy Shi"
-date: "2021-06-10"
+date: "2021-11-16"
 output:
     html_document:
         keep_md: true
@@ -92,30 +92,30 @@ kable(quantile_df, n = Inf)
 
 |geo_level   |   rt_upper| case_upper|  death_upper| quantile|
 |:-----------|----------:|----------:|------------:|--------:|
-|country     |   1.285111|  0.0000208| 1.100000e-06|   0.5000|
-|country     |   1.682777|  0.0001616| 4.400000e-06|   0.8000|
-|country     |   2.190031|  0.0003167| 7.700000e-06|   0.9000|
-|country     |   5.799516|  0.0010317| 2.130000e-05|   0.9900|
-|country     |  12.921135|  0.0232764| 1.442181e+05|   0.9990|
-|country     | 824.772653| 17.3087670|          Inf|   0.9999|
-|county      |   1.364336|  0.0002592| 6.700000e-06|   0.5000|
-|county      |   1.716119|  0.0006338| 1.530000e-05|   0.8000|
-|county      |   2.083550|  0.0009224| 2.280000e-05|   0.9000|
-|county      |   5.507032|  0.0018769| 5.800000e-05|   0.9900|
-|county      |  56.347493|  0.0039405| 1.351000e-04|   0.9990|
-|county      | 562.536081|  0.0098686| 7.007607e+29|   0.9999|
-|state       |   1.257915|  0.0001581| 3.400000e-06|   0.5000|
-|state       |   1.479482|  0.0004002| 8.300000e-06|   0.8000|
-|state       |   1.648093|  0.0006511| 1.230000e-05|   0.9000|
-|state       |   3.222350|  0.0011914| 4.180000e-05|   0.9900|
-|state       |   7.068664|  0.0017126|          Inf|   0.9990|
-|state       |  15.000427|  0.0019750|          Inf|   0.9999|
-|subnational |   1.244412|  0.0000909| 3.900000e-06|   0.5000|
-|subnational |   1.509709|  0.0002776| 8.400000e-06|   0.8000|
-|subnational |   1.703627|  0.0004170| 1.240000e-05|   0.9000|
-|subnational |   3.024352|  0.0008469| 2.970000e-05|   0.9900|
-|subnational |   7.202996|  0.0014500| 4.850000e-05|   0.9990|
-|subnational |  32.702677|  0.0049077|          Inf|   0.9999|
+|country     |   1.298344|  0.0000275| 1.000000e-06|   0.5000|
+|country     |   1.730980|  0.0001915| 4.300000e-06|   0.8000|
+|country     |   2.218589|  0.0003666| 7.500000e-06|   0.9000|
+|country     |   5.762953|  0.0016983| 2.260000e-05|   0.9900|
+|country     |  14.193032|        Inf| 1.235203e+07|   0.9990|
+|country     |  19.929478|        Inf| 2.389281e+15|   0.9999|
+|county      |   1.548273|  0.0002768| 5.300000e-06|   0.5000|
+|county      |   2.014690|  0.0006879| 1.310000e-05|   0.8000|
+|county      |   2.441380|  0.0009832| 2.000000e-05|   0.9000|
+|county      |   5.709148|  0.0019430| 5.210000e-05|   0.9900|
+|county      |  37.403941|  0.0040558| 1.486000e-04|   0.9990|
+|county      | 652.437692|  0.0573105|          Inf|   0.9999|
+|state       |   1.337868|  0.0001847| 3.200000e-06|   0.5000|
+|state       |   1.665815|  0.0004798| 7.900000e-06|   0.8000|
+|state       |   1.938941|  0.0006787| 1.200000e-05|   0.9000|
+|state       |   3.635303|  0.0012220| 2.440000e-05|   0.9900|
+|state       |  11.491222|  0.0019428| 4.620000e-05|   0.9990|
+|state       |  42.351092|  0.0019893| 5.910000e-05|   0.9999|
+|subnational |   1.245656|  0.0000890| 3.700000e-06|   0.5000|
+|subnational |   1.547706|  0.0002587| 8.100000e-06|   0.8000|
+|subnational |   1.769602|  0.0003988| 1.180000e-05|   0.9000|
+|subnational |   3.041493|  0.0009111| 2.920000e-05|   0.9900|
+|subnational |   7.397128|  0.0015763| 5.030000e-05|   0.9990|
+|subnational |  16.386878|  0.0041992|          Inf|   0.9999|
 
 ## Worst Offenders
 
@@ -152,77 +152,77 @@ kable(top_rates_lst)
 |Combined_Key           |   rt_upper|
 |:----------------------|----------:|
 |Livingston, Missouri   | 8660.06441|
-|Lesotho                | 1136.89200|
+|Karnes, Texas          | 7243.46641|
+|South Dakota           | 3166.81817|
+|Rhea, Tennessee        | 1564.82295|
+|Jasper, Iowa           | 1325.56839|
+|Dodge, Nebraska        |  765.69284|
 |Madison, Texas         |  744.29717|
-|Medina, Texas          |  314.30089|
-|Rapides, Louisiana     |  147.95422|
-|Orange, Texas          |  140.73089|
+|Letcher, Kentucky      |  652.43769|
+|DeWitt, Texas          |  504.37087|
+|Laurel, Kentucky       |  274.13571|
+|Marion, Iowa           |  179.68160|
+|Scotts Bluff, Nebraska |  132.92298|
+|Titus, Texas           |  124.47142|
+|Grimes, Texas          |  119.67576|
+|Walker, Texas          |  112.61004|
 |Lincoln, Arkansas      |  108.67827|
-|South Sudan            |  107.13500|
-|Bastrop, Texas         |  106.28627|
-|Titus, Texas           |  104.05893|
-|Carson City, Nevada    |   99.19458|
+|Lancaster, Nebraska    |  107.17901|
+|Bastrop, Texas         |  103.13029|
 |Moore, Texas           |   93.83180|
 |Woodward, Oklahoma     |   86.37044|
-|Columbiana, Ohio       |   83.09680|
-|Madagascar             |   70.29292|
-|Morgan, Kentucky       |   69.16967|
-|Scotts Bluff, Nebraska |   65.47305|
-|Chicot, Arkansas       |   65.44827|
-|Bexar, Texas           |   63.92303|
-|Iberville, Louisiana   |   63.44578|
 
  </td>
    <td> 
 
-|Combined_Key            | case_upper|
-|:-----------------------|----------:|
-|Heilongjiang, China     | 18.4129651|
-|Hubei, China            |  2.0402384|
-|Marion, Ohio            |  0.0802726|
-|Johnson, Wyoming        |  0.0476055|
-|Lee, Arkansas           |  0.0413296|
-|Bent, Colorado          |  0.0412814|
-|Daviess, Missouri       |  0.0234203|
-|La Salle, Texas         |  0.0183337|
-|Livingston, Missouri    |  0.0164446|
-|Putnam, Missouri        |  0.0154255|
-|Lincoln, Colorado       |  0.0130275|
-|Maverick, Texas         |  0.0116431|
-|Crowley, Colorado       |  0.0105167|
-|Nunavut, Canada         |  0.0105015|
-|Dakota, Nebraska        |  0.0101876|
-|Knox, Texas             |  0.0098752|
-|Finney, Kansas          |  0.0092955|
-|Norton, Kansas          |  0.0089420|
-|Bon Homme, South Dakota |  0.0086269|
-|Scurry, Texas           |  0.0083727|
+|Combined_Key                           |    case_upper|
+|:--------------------------------------|-------------:|
+|Grenada                                | 2.671400e+270|
+|Jiangsu, China                         | 2.740080e+240|
+|British Virgin Islands, United Kingdom |  3.093824e+05|
+|Crowley, Colorado                      |  1.699501e+05|
+|Hubei, China                           |  2.090313e+00|
+|Marion, Ohio                           |  6.677810e-02|
+|Aleutians East, Alaska                 |  5.731050e-02|
+|Rock, Nebraska                         |  2.340740e-02|
+|Bent, Colorado                         |  2.110620e-02|
+|Daviess, Missouri                      |  1.961520e-02|
+|Goliad, Texas                          |  1.802780e-02|
+|Lincoln, Arkansas                      |  1.800700e-02|
+|La Salle, Texas                        |  1.563990e-02|
+|Lee, Arkansas                          |  1.530870e-02|
+|Livingston, Missouri                   |  1.509000e-02|
+|San Juan, Colorado                     |  1.354970e-02|
+|Dakota, Nebraska                       |  1.101220e-02|
+|Norton, Kansas                         |  9.891400e-03|
+|Terrell, Texas                         |  9.702200e-03|
+|Emmons, North Dakota                   |  9.129400e-03|
 
  </td>
    <td> 
 
-|Combined_Key           |  death_upper|
-|:----------------------|------------:|
-|Nevada, California     | 2.931638e+34|
-|Nova Scotia, Canada    | 6.723059e+06|
-|Stanly, North Carolina | 2.872210e-02|
-|Luna, New Mexico       | 2.350000e-04|
-|Phelps, Missouri       | 2.176000e-04|
-|Lea, New Mexico        | 1.850000e-04|
-|Duplin, North Carolina | 1.781000e-04|
-|Muskogee, Oklahoma     | 1.721000e-04|
-|Montgomery, New York   | 1.562000e-04|
-|Penobscot, Maine       | 1.531000e-04|
-|Herkimer, New York     | 1.496000e-04|
-|Cayuga, New York       | 1.360000e-04|
-|Warren, New Jersey     | 1.352000e-04|
-|Barren, Kentucky       | 1.351000e-04|
-|Mifflin, Pennsylvania  | 1.261000e-04|
-|Fayette, Pennsylvania  | 1.139000e-04|
-|Lawrence, Alabama      | 1.129000e-04|
-|Columbia, New York     | 1.113000e-04|
-|Jefferson, Ohio        | 1.109000e-04|
-|Houston, Alabama       | 1.108000e-04|
+|Combined_Key             |  death_upper|
+|:------------------------|------------:|
+|Elkhart, Indiana         | 3.646890e+60|
+|Hawaii, Hawaii           | 5.071304e+25|
+|Nova Scotia, Canada      | 4.688131e+15|
+|McDowell, North Carolina | 1.508332e+01|
+|Okmulgee, Oklahoma       | 7.138200e-03|
+|Custer, Oklahoma         | 3.306000e-04|
+|Caddo, Oklahoma          | 3.233000e-04|
+|Luna, New Mexico         | 2.350000e-04|
+|Bee, Texas               | 2.291000e-04|
+|Lesotho                  | 1.928000e-04|
+|Perry, Kentucky          | 1.807000e-04|
+|Lawrence, Alabama        | 1.781000e-04|
+|Pitt, North Carolina     | 1.771000e-04|
+|Orange, New York         | 1.667000e-04|
+|Burke, North Carolina    | 1.621000e-04|
+|Preble, Ohio             | 1.564000e-04|
+|Hancock, West Virginia   | 1.548000e-04|
+|Rockland, New York       | 1.511000e-04|
+|Herkimer, New York       | 1.496000e-04|
+|Belmont, Ohio            | 1.495000e-04|
 
  </td>
   </tr>
@@ -249,7 +249,7 @@ summary(theta_vals)
 
 ```
 ##      Min.   1st Qu.    Median      Mean   3rd Qu.      Max. 
-## 0.000e+00 2.000e+00 4.000e+00 2.473e+15 7.000e+00 6.889e+18
+## 0.000e+00 2.000e+00 3.000e+00 3.161e+15 7.000e+00 6.588e+18
 ```
 
 ```r
@@ -283,7 +283,7 @@ summary(pchisq_vals)
 
 ```
 ##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
-## 0.00000 0.01919 0.22323 0.36969 0.68786 1.00000
+##  0.0000  0.0000  0.1668  0.3573  0.7594  1.0000
 ```
 
 ```r
@@ -303,7 +303,7 @@ cat(sprintf("Overdispersion detected in %f cases.\n", mean(pchisq_vals < 0.01)))
 ```
 
 ```
-## Overdispersion detected in 0.225519 cases.
+## Overdispersion detected in 0.350000 cases.
 ```
 
 
@@ -336,7 +336,7 @@ sessionInfo()
 ```
 ## R version 4.0.4 (2021-02-15)
 ## Platform: x86_64-pc-linux-gnu (64-bit)
-## Running under: Ubuntu 20.04.2 LTS
+## Running under: Ubuntu 20.04.3 LTS
 ## 
 ## Matrix products: default
 ## BLAS/LAPACK: /opt/OpenBLAS/OpenBLAS_0.3.13/lib/libopenblas-r0.3.13.so
