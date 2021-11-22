@@ -430,6 +430,11 @@ fit_rt_case_death <- function(cur_uid, data, rt_opts, case_opts, death_opts) {
   log_info(sprintf("Working on UID %d (%s)...", cur_uid,
                    data_subset$Combined_Key[1]))
 
+  if (any(duplicated(data_subset, by = "date"))) {
+    log_warn("Duplicated dates found. Subsetting to unique dates.")
+    data_subset <- unique(data_subset, by = "date")
+  }
+
   log_trace("Working on Rt regression...")
   rt_fit_params <- c(list(date = data_subset$date,
                           new_counts = data_subset$positiveIncrease,
