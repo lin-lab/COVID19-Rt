@@ -14,8 +14,15 @@ read_jhu <- function(level = c("County", "State", "Global", "Subnational"),
   data_url <- paste0(base_url, zip_filename)
 
   # download AWS zipped csv to temp file, and read it in
+  wget_cmd <- Sys.which("wget")
+  if (wget_cmd != "" && !is.na(wget_cmd)) {
+    download_method <- "wget"
+    log_info("Using wget to download...")
+  } else {
+    download_method <- "auto"
+  }
   temp_file <- tempfile()
-  download.file(data_url, temp_file)
+  download.file(data_url, temp_file, method = download_method)
   cmd <- sprintf("unzip -p %s", temp_file)
   dat <- data.table::fread(cmd = cmd)[date >= start_date, ]
   dat[, date := as.Date(date, format = "%Y-%m-%d")]
